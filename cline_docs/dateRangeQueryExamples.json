@@ -1,0 +1,126 @@
+[
+  {
+    
+      "entityType": "TimeEntries",
+      "dateRangeType": "thisMonth"
+    },
+    {
+      "entityType": "TimeEntries",
+      "dateRangeType": "thisMonth",
+      "startDate": "2025-04-01T00:00:00",
+      "endDate": "2025-04-30T00:00:00",
+      "dateField": "Date",
+      "filters": [
+        {
+          "field": "Date",
+          "operator": "gte",
+          "value": "2025-04-01"
+        },
+        {
+          "field": "Date",
+          "operator": "lte",
+          "value": "2025-04-30"
+        }
+      ],
+      "query": "/TimeEntries?startDate=2025-04-01&endDate=2025-04-30&pageNumber=1&pageSize=100",
+      "queryParameters": {
+        "startDate": "2025-04-01",
+        "endDate": "2025-04-30",
+        "pageNumber": 1,
+        "pageSize": 100
+      },
+      "results": null,
+      "totalResults": 0,
+      "executionTime": "00:00:00"
+    },
+    {
+      "entityType": "Invoices",
+      "dateRangeType": "custom",
+      "startDate": "2025-01-01",
+      "endDate": "2025-03-31",
+      "executeQuery": true
+    },
+    {
+      "entityType": "TimeEntries",
+      "dateRangeType": "lastMonth",
+      "filters": [
+        {
+          "field": "divisionId",
+          "operator": "eq",
+          "value": "d-202"
+        }
+      ],
+      "executeQuery": true
+    },
+    {
+      "entityType": "Opportunities",
+      "dateRangeType": "thisQuarter",
+      "filters": [
+        {
+          "field": "status",
+          "operator": "eq",
+          "value": "open"
+        }
+      ]
+    },
+    {
+      "entityType": "WorkTickets",
+      "dateRangeType": "last30days",
+      "filters": [
+        {
+          "field": "jobId",
+          "operator": "eq",
+          "value": "j-67890"
+        },
+        {
+          "field": "isDeleted",
+          "operator": "eq",
+          "value": "false"
+        }
+      ]
+    },
+    {
+      "entityType": "Jobs",
+      "dateRangeType": "thisYear",
+      "filters": [
+        {
+          "field": "branchId",
+          "operator": "eq",
+          "value": "b-101"
+        }
+      ],
+      "executeQuery": true
+    },
+    {
+      "entityType": "TimeEntries",
+      "dateRangeType": "yesterday"
+    },
+    {
+      "entityType": "Invoices",
+      "dateRangeType": "lastQuarter",
+      "filters": [
+        {
+          "field": "branchId",
+          "operator": "eq",
+          "value": "b-101"
+        }
+      ]
+    },
+    {
+      "entityType": "TimeEntries",
+      "dateRangeType": "last90days",
+      "filters": [
+        {
+          "field": "contactId",
+          "operator": "eq",
+          "value": "c-12345"
+        }
+      ],
+      "executeQuery": true
+    },
+    {
+      "entityType": "Jobs",
+      "dateRangeType": "lastYear"
+    }
+  
+]

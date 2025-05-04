@@ -1,0 +1,100 @@
+{
+  "reportDefinition": {
+    "dataSources": [
+      {
+        "entityType": "TimeEntries",
+        "parameters": {
+          "startDate": "2025-04-01",
+          "endDate": "2025-04-30"
+        }
+      },
+      {
+        "entityType": "Contacts",
+        "parameters": {
+          "type": "customer"
+        },
+        "joinType": "inner",
+        "joinCondition": {
+          "leftField": "ContactId",
+          "rightField": "Id",
+          "rightPrefix": "client"
+        }
+      },
+      {
+        "entityType": "Divisions",
+        "parameters": {},
+        "joinType": "inner",
+        "joinCondition": {
+          "leftField": "DivisionId",
+          "rightField": "Id",
+          "rightPrefix": "division"
+        }
+      }
+    ],
+    "filters": [
+      {
+        "field": "Hours",
+        "operator": "gt",
+        "value": 0
+      },
+      {
+        "field": "client.Type",
+        "operator": "eq",
+        "value": "customer"
+      }
+    ],
+    "calculations": [
+      {
+        "name": "BillableHours",
+        "type": "formula",
+        "formula": "Hours * 0.9"
+      },
+      {
+        "name": "NonBillableHours",
+        "type": "formula",
+        "formula": "Hours * 0.1"
+      },
+      {
+        "name": "HourlyRate",
+        "type": "formula",
+        "formula": "Cost / Hours"
+      }
+    ],
+    "groupBy": [
+      "ContactName",
+      "division.Name"
+    ],
+    "aggregations": [
+      {
+        "name": "TotalHours",
+        "function": "sum",
+        "field": "Hours"
+      },
+      {
+        "name": "TotalBillableHours",
+        "function": "sum",
+        "field": "BillableHours"
+      },
+      {
+        "name": "TotalCost",
+        "function": "sum",
+        "field": "Cost"
+      },
+      {
+        "name": "AvgHourlyRate",
+        "function": "avg",
+        "field": "HourlyRate"
+      }
+    ],
+    "sortBy": [
+      {
+        "field": "TotalHours",
+        "direction": "desc"
+      }
+    ],
+    "pageNumber": 1,
+    "pageSize": 50
+  },
+  "reportName": "Client and Division Time Analysis",
+  "outputFormat": "dashboard"
+}

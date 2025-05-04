@@ -1,0 +1,13 @@
+{
+  "name": "aspire-mcp-test-scripts",
+  "version": "1.0.0",
+  "description": "Test scripts for AspireMCP server",
+  "main": "test-mcp-server.js",
+  "scripts": {
+    "test": "node test-mcp-server.js"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.9",
+    "chalk": "^4.1.2"
+  }
+}

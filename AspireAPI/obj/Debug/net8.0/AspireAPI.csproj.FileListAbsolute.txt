@@ -1,0 +1,6 @@
+/Users/gabrielphoenix/Documents/vscode/Aspire MCP/AspireAPI/obj/Debug/net8.0/AspireAPI.csproj.AssemblyReference.cache
+/Users/gabrielphoenix/Documents/vscode/Aspire MCP/AspireAPI/obj/Debug/net8.0/AspireAPI.GeneratedMSBuildEditorConfig.editorconfig
+/Users/gabrielphoenix/Documents/vscode/Aspire MCP/AspireAPI/obj/Debug/net8.0/AspireAPI.AssemblyInfoInputs.cache
+/Users/gabrielphoenix/Documents/vscode/Aspire MCP/AspireAPI/obj/Debug/net8.0/AspireAPI.AssemblyInfo.cs
+/Users/gabrielphoenix/Documents/vscode/Aspire MCP/AspireAPI/obj/Debug/net8.0/AspireAPI.csproj.CoreCompileInputs.cache
+/Users/gabrielphoenix/Documents/vscode/Aspire MCP/AspireAPI/obj/Debug/net8.0/AspireAPI.MvcApplicationPartsAssemblyInfo.cache

@@ -97,11 +97,15 @@ public partial class AspireMcpServer
         foreach (var toolDef in toolDefinitions)
         {
             var schema = await toolDef.GetSchemaAsync(cancellationToken);
+            // Per the MCP spec, inputSchema is a nested JSON object on the wire,
+            // not a JSON string. Parse the rendered schema once here so the
+            // outer JSON-RPC serializer embeds it as an object.
+            using var schemaDoc = JsonDocument.Parse(schema.ToJson());
             tools.Add(new Tool
             {
                 Name = toolDef.Name,
                 Description = toolDef.Description,
-                InputSchema = schema.ToJson()
+                InputSchema = schemaDoc.RootElement.Clone()
             });
         }
 

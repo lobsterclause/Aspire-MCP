@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Text.Json;
 using NJsonSchema;
 
 namespace AspireAPI
@@ -30,7 +31,10 @@ namespace AspireAPI
     {
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public string? InputSchema { get; set; }
+        // Per the MCP spec, inputSchema must be a NESTED JSON object, not a JSON
+        // string. Using JsonElement so the serialized response embeds it as an
+        // object directly instead of an escaped string literal.
+        public JsonElement? InputSchema { get; set; }
     }
     
     public class ListToolsResult

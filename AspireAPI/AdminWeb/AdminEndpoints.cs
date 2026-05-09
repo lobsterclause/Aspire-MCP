@@ -40,6 +40,30 @@ namespace AspireAPI.AdminWeb
                     note = "Settings written. Restart the MCP server (close stdio client, relaunch) for the changes to take effect.",
                 });
             });
+
+            app.MapGet("/api/tools", async (ToolCatalogService catalog, System.Threading.CancellationToken ct) =>
+            {
+                var entries = await catalog.ListAsync(ct);
+                return Results.Json(new { count = entries.Count, tools = entries });
+            });
+
+            app.MapPost("/api/tools/{name}/invoke", async (
+                string name,
+                HttpRequest req,
+                ToolCatalogService catalog,
+                System.Threading.CancellationToken ct) =>
+            {
+                var dryRun = string.Equals(req.Query["dryRun"].ToString(), "true",
+                    StringComparison.OrdinalIgnoreCase);
+                System.Text.Json.JsonElement? args = null;
+                if (req.ContentLength is > 0)
+                {
+                    using var doc = await System.Text.Json.JsonDocument.ParseAsync(req.Body, cancellationToken: ct);
+                    args = doc.RootElement.Clone();
+                }
+                var result = await catalog.InvokeAsync(name, args, dryRun, ct);
+                return Results.Json(result);
+            });
         }
 
         private static string LoadEmbeddedResource(string name)

@@ -82,6 +82,7 @@ public class Program
         ConfigureSharedServices(builder.Services, builder.Configuration);
 
         builder.Services.AddSingleton(_ => new LocalSettingsStore(builder.Environment.ContentRootPath));
+        builder.Services.AddSingleton<ToolCatalogService>();
 
         var app = builder.Build();
         app.MapAdminEndpoints();
@@ -171,6 +172,20 @@ public class Program
 
         // Register the code-generated tool surface (every endpoint in the Aspire OpenAPI spec).
         services.AddGeneratedAspireTools();
+
+        // Single shared router: hand-written 4 + 158 generated tools, registered
+        // once in the singleton factory. Both AspireMcpServer (stdio mode) and
+        // the admin web layer (admin mode) consume this same instance.
+        services.AddSingleton<AspireToolRouter>(sp =>
+        {
+            var router = new AspireToolRouter(sp);
+            router.RegisterTool("ListPayments", p => p.GetRequiredService<ListPaymentsHandler>());
+            router.RegisterTool("ListProperties", p => p.GetRequiredService<ListPropertiesHandler>());
+            router.RegisterTool("ListContacts", p => p.GetRequiredService<ListContactsHandler>());
+            router.RegisterTool("ListJobs", p => p.GetRequiredService<ListJobsHandler>());
+            router.RegisterGeneratedTools(sp);
+            return router;
+        });
     }
 }
 

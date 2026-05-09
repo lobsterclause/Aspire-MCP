@@ -25,11 +25,14 @@ public partial class AspireMcpServer
     private readonly ListContactsHandler _listContactsHandler;
     private readonly ListJobsHandler _listJobsHandler;
     
-    // Inject all the required handlers
+    // Router is now resolved from DI (singleton) — admin-mode UI shares the same
+    // router instance so its catalog/runner sees the exact same tool surface as
+    // an MCP client would.
     public AspireMcpServer(
         TokenService tokenService,
         ILogger<AspireMcpServer> logger,
         IServiceProvider serviceProvider,
+        AspireToolRouter toolRouter,
         ListPaymentsHandler listPaymentsHandler,
         ListPropertiesHandler listPropertiesHandler,
         ListContactsHandler listContactsHandler,
@@ -38,16 +41,11 @@ public partial class AspireMcpServer
         _tokenService = tokenService;
         _logger = logger;
         _serviceProvider = serviceProvider;
+        _toolRouter = toolRouter;
         _listPaymentsHandler = listPaymentsHandler;
         _listPropertiesHandler = listPropertiesHandler;
         _listContactsHandler = listContactsHandler;
         _listJobsHandler = listJobsHandler;
-
-        // Create the tool router (needs IServiceProvider for reporting-tool registration)
-        _toolRouter = new AspireToolRouter(serviceProvider);
-
-        // Register tools using the RegisterToolHandlers method from AspireServerTools
-        RegisterToolHandlers();
 
         // Create the MCP server with Stdio transport
         var options = new McpServerOptions

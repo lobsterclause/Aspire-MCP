@@ -14,20 +14,11 @@ public partial class AspireMcpServer
     // These handlers are already defined in AspireMcpServer.cs
     // No need to redefine them here since this is a partial class
     
-    /// <summary>
-    /// Register tool handlers with the router
-    /// </summary>
-    private void RegisterToolHandlers()
-    {
-        // Register the activated hand-written tools
-        _toolRouter.RegisterTool("ListPayments", provider => _listPaymentsHandler);
-        _toolRouter.RegisterTool("ListProperties", provider => _listPropertiesHandler);
-        _toolRouter.RegisterTool("ListContacts", provider => _listContactsHandler);
-        _toolRouter.RegisterTool("ListJobs", provider => _listJobsHandler);
-
-        // Register every code-generated tool (one per Aspire OpenAPI operation).
-        RegisterGeneratedTools();
-    }
+    // Router population now happens at DI registration time inside
+    // AspireToolRouter's singleton factory (see Program.ConfigureSharedServices).
+    // This partial used to register tools here; left as a no-op for back-compat
+    // with any external caller still invoking it.
+    private void RegisterToolHandlers() { }
 
     /// <summary>
     /// Handle ListPayments tool requests with advanced OData query support

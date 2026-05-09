@@ -1,51 +1,27 @@
-using Microsoft.Extensions.Logging;
-using ModelContextProtocol.Protocol.Types;
-using ModelContextProtocol.Server;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using AspireAPI.Generated;
 
-using AspireAPI.Models; // Added using directive for Models
 namespace AspireAPI.Handlers
 {
-    public class ListJobsHandler : BaseHandler
+    /// <summary>
+    /// Hand-written tool kept for back-compat with existing MCP clients that already
+    /// know the "ListJobs" name. Behaviour is identical to the generated ListJob tool
+    /// — a GET against /Jobs with OData query support.
+    /// </summary>
+    public sealed class ListJobsHandler : GeneratedHandler
     {
         public ListJobsHandler(
             ILogger<ListJobsHandler> logger,
             IHttpClientFactory httpClientFactory,
-            AspireApiHelpers apiHelpers)
-            : base(logger, httpClientFactory, apiHelpers)
-        {
-        }
+            AspireApiHelpers apiHelpers,
+            AspireGenericClient client)
+            : base(logger, httpClientFactory, apiHelpers, client) { }
 
-        public override async Task<CallToolResponse> HandleAsync(
-            IDictionary<string, object> arguments,
-            string accessToken,
-            CancellationToken cancellationToken)
-        {
-            try
-            {
-                var responseContent = await GetJobsFromApi(accessToken, cancellationToken);
-                return CreateResponse(responseContent);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in ListJobsHandler");
-                throw new McpServerException($"Error listing jobs: {ex.Message}", ex);
-            }
-        }
-
-        private async Task<string> GetJobsFromApi(
-            string accessToken,
-            CancellationToken cancellationToken)
-        {
-            var client = CreateAuthenticatedClient(accessToken);
-            var url = "https://cloud-api.youraspire.com/Jobs";
-            
-            var response = await client.GetAsync(url, cancellationToken);
-            return await GetResponseContentAsync(response, cancellationToken);
-        }
+        protected override string HttpMethod => "GET";
+        protected override string PathTemplate => "/Jobs";
+        protected override IReadOnlyList<string> QueryParameterNames { get; } =
+            new[] { "$filter", "$top", "$skip", "$orderby", "$select", "$expand" };
     }
 }

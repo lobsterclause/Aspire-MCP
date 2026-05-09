@@ -148,15 +148,54 @@ AspireMCP/
 └── run-aspire-mcp.bat      # Windows automation script
 ```
 
+## Tool surface
+
+As of the most recent codegen run (Aspire OpenAPI spec dated Nov 2025), the
+server exposes **162 tools**: 4 hand-written back-compat aliases
+(`ListContacts`, `ListJobs`, `ListPayments`, `ListProperties`) plus 158
+code-generated tools — one per `(path, method)` pair across every endpoint in
+the Aspire External REST API. The generated set covers every read operation,
+every documented write operation (POST/PUT/PATCH/DELETE), and every custom
+action endpoint such as `Receipts/Approve`, `Receipts/Receive`,
+`WorkTickets/CreateAsNeededWorkTickets`, and
+`WorkTicketStatus/MarkWorkTicketAsReviewed`.
+
+The full inventory — names, methods, paths, query/path parameters, and
+descriptions — is committed at `AspireAPI/Generated/tool-manifest.json`.
+
+### Production-write safety guard
+
+Mutating verbs (POST/PUT/PATCH/DELETE) are silently refused when the configured
+`AspireApi:BaseUrl` points at the production host (anything not containing
+"sandbox") unless `ASPIRE_ALLOW_PROD_WRITES=1` is set in the environment.
+Point at `https://cloudsandbox-api.youraspire.com` for routine development.
+
+### Regenerating the tool surface
+
+When Aspire publishes new endpoints (see
+https://guide.youraspire.com/v1-api/apidocs/whats-new ), refresh the spec and
+re-run codegen:
+
+```bash
+curl -sL https://cloud-api.youraspire.com/swagger/v1/swagger.json \
+  -o tools/aspire-codegen/swagger.json
+python3 tools/aspire-codegen/generate.py
+dotnet build AspireAPI/AspireAPI.csproj
+```
+
+Generated files live under `AspireAPI/Generated/` and are intentionally
+committed for auditability — diffs against them on a swagger refresh are how
+you see what Aspire added or removed.
+
 ## Advanced Usage
 
 ### Custom Tool Development
 
-To add new tools to the AspireMCP server:
-
-1. Create a new tool definition in `AspireAPI/ToolDefinitions/`
-2. Implement the handler in `AspireAPI/Handlers/`
-3. Register the tool in `AspireAPI/AspireMcpServer.cs`
+Most tools should be added by re-running the codegen against an updated swagger
+spec (see above). For genuinely bespoke tools that don't map 1:1 to an Aspire
+endpoint, add a hand-written pair under `AspireAPI/Handlers/` +
+`AspireAPI/ToolDefinitions/` and register them in
+`AspireAPI/AspireServerTools.cs::RegisterToolHandlers`.
 
 ### Server Configuration
 

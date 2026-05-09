@@ -16,6 +16,48 @@ The AspireMCP server exposes Aspire API functionality as tools and resources tha
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or later
 - [Node.js](https://nodejs.org/) v12 or higher (for running test scripts)
 - npm or yarn package manager (for managing test dependencies)
+- An Aspire tenant with API access enabled (sandbox by default — see below)
+
+## Configuring Aspire credentials
+
+Before the server can call any tool, you must populate `appsettings.Development.json`
+(or `appsettings.json`, or environment variables) with OAuth credentials issued
+by your Aspire administrator.
+
+### One-time setup in the Aspire UI
+
+In the Aspire web app, navigate to: **Administration → Application → API**.
+There, **Create Client** to mint a `ClientId` / `ClientSecret` pair, choose the
+scopes the integration needs, and toggle **Active** on. The same screen lists
+the username + company key the OAuth flow needs.
+
+### appsettings.Development.json
+
+Create this file (it's gitignored — never commit credentials):
+
+```jsonc
+{
+  "AspireApi": {
+    // Sandbox is the default — change to https://cloud-api.youraspire.com for prod
+    "BaseUrl": "https://cloudsandbox-api.youraspire.com",
+    "ClientId": "YOUR_CLIENT_ID",
+    "ClientSecret": "YOUR_CLIENT_SECRET",
+    "OAuthServerUrl": "https://cloudsandbox-api.youraspire.com",
+    "Auth": {
+      "Username": "your-aspire-user@example.com",
+      "Password": "...",
+      "CompanyKey": "your-company-key"
+    }
+  }
+}
+```
+
+### Production-write safety
+
+The MCP server refuses POST/PUT/PATCH/DELETE requests at the production host
+(`cloud-api.youraspire.com` or `api.youraspire.com`) unless the operator sets
+`ASPIRE_ALLOW_PROD_WRITES=1` in the environment. This is intentional — point
+`BaseUrl` at the sandbox for routine development. Reads are always allowed.
 
 ## Building the AspireAPI Project
 

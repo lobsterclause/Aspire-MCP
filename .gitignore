@@ -23,3 +23,8 @@ Thumbs.db
 # Python codegen cache
 __pycache__/
 *.pyc
+
+# Local credentials — appsettings.Local.json is never tracked.
+# Note: appsettings.Development.json is currently tracked from the initial commit
+# and contains real values (ClientId/ApiKey). Rotate + untrack as a separate fix.
+appsettings.Local.json

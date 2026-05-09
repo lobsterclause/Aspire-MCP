@@ -1,0 +1,43 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  dotnet-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore + build
+        run: dotnet build AspireAPI/AspireAPI.csproj --configuration Release -warnaserror:CS0535,CS0246,CS1503,CS0117,CS0029,CS1501,CS1913,CS0103
+
+  codegen-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Re-run codegen
+        run: python3 tools/aspire-codegen/generate.py
+
+      - name: Fail if codegen output drifted from committed files
+        run: |
+          if ! git diff --quiet -- AspireAPI/Generated/; then
+            echo "::error::Codegen output differs from committed AspireAPI/Generated/."
+            echo "Either:"
+            echo "  - commit the regenerated files (after refreshing tools/aspire-codegen/swagger.json), or"
+            echo "  - revert the swagger.json change"
+            git --no-pager diff --stat -- AspireAPI/Generated/
+            exit 1
+          fi

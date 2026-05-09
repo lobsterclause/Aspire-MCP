@@ -9,9 +9,12 @@ namespace AspireAPI
     public class AspireApiOptions
     {
         /// <summary>
-        /// Gets or sets the base URL for the Aspire Cloud API
+        /// Gets or sets the base URL for the Aspire Cloud API. Default is the
+        /// production-write-guarded sandbox host so a fresh clone with no config
+        /// cannot accidentally hit the production tenant. Override in
+        /// appsettings.json (or AspireApi__BaseUrl env var) to point at production.
         /// </summary>
-        public string BaseUrl { get; set; } = "https://api.youraspire.com";
+        public string BaseUrl { get; set; } = "https://cloudsandbox-api.youraspire.com";
         
         /// <summary>
         /// Gets or sets the API key for authenticating with the Aspire Cloud API

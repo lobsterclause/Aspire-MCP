@@ -42,7 +42,10 @@ namespace AspireAPI
         /// <returns>An authenticated HTTP client</returns>
         public HttpClient CreateAuthenticatedClient(string accessToken)
         {
-            var client = _httpClientFactory.CreateClient("AspireApi");
+            // Name must match the AddHttpClient registration in Program.cs ("AspireAPI",
+            // case-sensitive). The earlier "AspireApi" misspelling silently fell back to
+            // the default unnamed client and bypassed the configured BaseAddress/Timeout.
+            var client = _httpClientFactory.CreateClient("AspireAPI");
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
             return client;
         }

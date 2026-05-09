@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -89,12 +90,14 @@ namespace AspireAPI.Generated
 
             using var request = new HttpRequestMessage(new HttpMethod(normalizedMethod), url);
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
-            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            // Accept header is supplied by the named "AspireAPI" client's
+            // DefaultRequestHeaders (configured in Program.cs).
 
             if (body is not null)
             {
-                var json = JsonSerializer.Serialize(body);
-                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                // JsonContent streams the serialization directly to the request stream
+                // instead of materialising the body as an intermediate string.
+                request.Content = JsonContent.Create(body);
             }
 
             // Per-request timeout via a linked CancellationTokenSource — never mutate
@@ -105,7 +108,11 @@ namespace AspireAPI.Generated
             using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(timeoutSeconds));
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
 
-            var client = _httpClientFactory.CreateClient();
+            // Use the named client configured in Program.cs (DefaultRequestHeaders +
+            // BaseAddress). We send absolute URLs so the configured BaseAddress is
+            // ignored at request time; the named registration is still useful for
+            // socket pooling and the Accept header.
+            var client = _httpClientFactory.CreateClient("AspireAPI");
 
             _logger.LogDebug("Aspire API: {Method} {Url}", normalizedMethod, url);
             using var response = await client.SendAsync(request, linkedCts.Token).ConfigureAwait(false);

@@ -1,8 +1,6 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,6 +29,13 @@ namespace AspireAPI.Generated
         /// <summary>Argument key under which a request body object is supplied. Defaults to "body".</summary>
         protected virtual string BodyArgumentName => "body";
 
+        // Pre-computed once per handler-type instance: union of path + query + body
+        // names. Used to identify "everything else" as implicit body fields. Lazy-init
+        // because PathParameterNames / QueryParameterNames are virtual and resolved
+        // by the subclass, not the base.
+        private HashSet<string>? _bodyIgnoreNames;
+        private HashSet<string> BodyIgnoreNames => _bodyIgnoreNames ??= BuildBodyIgnoreNames();
+
         protected GeneratedHandler(
             ILogger logger,
             IHttpClientFactory httpClientFactory,
@@ -48,15 +53,26 @@ namespace AspireAPI.Generated
         {
             try
             {
-                var caseInsensitive = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
-                if (arguments != null)
+                // Upstream router (AspireMcpServer.CallToolHandlerAsync) constructs a
+                // case-insensitive dictionary from the MCP request. We copy into our own
+                // typed map (object? value type) to avoid forcing every callsite below
+                // to disambiguate null. If `arguments` is null (per MCP spec for
+                // parameterless tools) the empty static instance is reused.
+                IDictionary<string, object?> args;
+                if (arguments is null || arguments.Count == 0)
                 {
-                    foreach (var kv in arguments) caseInsensitive[kv.Key] = kv.Value;
+                    args = EmptyArgs;
+                }
+                else
+                {
+                    var copy = new Dictionary<string, object?>(arguments.Count, StringComparer.OrdinalIgnoreCase);
+                    foreach (var kv in arguments) copy[kv.Key] = kv.Value;
+                    args = copy;
                 }
 
-                var path = ResolvePath(caseInsensitive);
-                var query = BuildQuery(caseInsensitive);
-                var body = AcceptsBody ? ExtractBody(caseInsensitive) : null;
+                var path = ResolvePath(args);
+                var query = BuildQuery(args);
+                var body = AcceptsBody ? ExtractBody(args) : null;
 
                 var responseBody = await Client.SendAsync(
                     HttpMethod, path, query, body, accessToken, cancellationToken).ConfigureAwait(false);
@@ -113,16 +129,29 @@ namespace AspireAPI.Generated
         {
             // First preference: explicit "body" argument.
             if (args.TryGetValue(BodyArgumentName, out var body) && body is not null) return body;
-            // Otherwise: collect all unrecognized scalar/object args into a body dictionary.
-            var ignore = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var n in PathParameterNames) ignore.Add(n);
-            foreach (var n in QueryParameterNames) ignore.Add(n);
-            ignore.Add(BodyArgumentName);
-            var implicitBody = args
-                .Where(kv => !ignore.Contains(kv.Key) && kv.Value is not null)
-                .ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase);
-            return implicitBody.Count == 0 ? null : implicitBody;
+            // Otherwise: collect all unrecognized args into a body dictionary, using
+            // the pre-computed ignore set so we don't allocate it per request.
+            var ignore = BodyIgnoreNames;
+            Dictionary<string, object?>? implicitBody = null;
+            foreach (var kv in args)
+            {
+                if (kv.Value is null || ignore.Contains(kv.Key)) continue;
+                (implicitBody ??= new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase))[kv.Key] = kv.Value;
+            }
+            return implicitBody;
         }
+
+        private HashSet<string> BuildBodyIgnoreNames()
+        {
+            var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var n in PathParameterNames) set.Add(n);
+            foreach (var n in QueryParameterNames) set.Add(n);
+            set.Add(BodyArgumentName);
+            return set;
+        }
+
+        private static readonly Dictionary<string, object?> EmptyArgs =
+            new(StringComparer.OrdinalIgnoreCase);
 
         private static string ToScalar(object value)
         {

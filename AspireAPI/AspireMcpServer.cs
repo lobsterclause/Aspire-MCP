@@ -139,6 +139,10 @@ public partial class AspireMcpServer
 
             // Per the MCP spec, parameterless tools may be invoked with no arguments
             // (omitted or null). Treat null as the empty argument set.
+            // Avoid the Serialize→Deserialize string round-trip on the hot path:
+            // if `arguments` is already a JsonElement (the common SDK shape), parse
+            // it directly. Otherwise fall back to the round-trip for unfamiliar
+            // shapes coming from custom transports.
             IDictionary<string, object> argsDictionary;
             if (arguments is null)
             {
@@ -146,11 +150,21 @@ public partial class AspireMcpServer
             }
             else
             {
-                var argsJson = JsonSerializer.Serialize(arguments);
-                argsDictionary = JsonSerializer.Deserialize<IDictionary<string, object>>(
-                    argsJson,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
-                    ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                var deserializeOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                if (arguments is JsonElement element)
+                {
+                    argsDictionary = element.ValueKind == JsonValueKind.Object
+                        ? element.Deserialize<IDictionary<string, object>>(deserializeOptions)
+                          ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+                        : new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                }
+                else
+                {
+                    var argsJson = JsonSerializer.Serialize(arguments);
+                    argsDictionary = JsonSerializer.Deserialize<IDictionary<string, object>>(
+                        argsJson, deserializeOptions)
+                        ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                }
             }
 
             // Get a valid access token

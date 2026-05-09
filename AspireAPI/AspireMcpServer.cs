@@ -134,9 +134,9 @@ public partial class AspireMcpServer
             var toolName = request.Params?.Name;
             var arguments = request.Params?.Arguments;
 
-            if (string.IsNullOrEmpty(toolName) || arguments == null)
+            if (string.IsNullOrEmpty(toolName))
             {
-                _logger.LogError("Invalid tool request: Missing tool name or arguments.");
+                _logger.LogError("Invalid tool request: missing tool name.");
                 return new CallToolResponse().WithError("Invalid tool request");
             }
 
@@ -149,16 +149,20 @@ public partial class AspireMcpServer
                  return new CallToolResponse().WithError($"Unknown tool: {toolName}");
             }
 
-            // Convert arguments to IDictionary<string, object> for processing
-            var argsJson = JsonSerializer.Serialize(arguments);
-            var argsDictionary = JsonSerializer.Deserialize<IDictionary<string, object>>(
-                argsJson,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-            if (argsDictionary == null)
+            // Per the MCP spec, parameterless tools may be invoked with no arguments
+            // (omitted or null). Treat null as the empty argument set.
+            IDictionary<string, object> argsDictionary;
+            if (arguments is null)
             {
-                 _logger.LogError($"Failed to deserialize arguments for tool: {toolName}");
-                 return new CallToolResponse().WithError("Failed to deserialize arguments");
+                argsDictionary = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            }
+            else
+            {
+                var argsJson = JsonSerializer.Serialize(arguments);
+                argsDictionary = JsonSerializer.Deserialize<IDictionary<string, object>>(
+                    argsJson,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                    ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             }
 
             // Get a valid access token

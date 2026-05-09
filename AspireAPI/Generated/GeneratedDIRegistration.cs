@@ -57,7 +57,7 @@ namespace AspireAPI.Generated
             services.AddSingleton<AspireAPI.Generated.Handlers.ListAttachmentHandler>();
             services.AddSingleton<AspireAPI.Generated.Handlers.ListAttachmentTypeHandler>();
             services.AddSingleton<AspireAPI.Generated.Handlers.ListBankDepositHandler>();
-            services.AddSingleton<AspireAPI.Generated.Handlers.ListBrancheHandler>();
+            services.AddSingleton<AspireAPI.Generated.Handlers.ListBranchHandler>();
             services.AddSingleton<AspireAPI.Generated.Handlers.ListCatalogItemHandler>();
             services.AddSingleton<AspireAPI.Generated.Handlers.ListCatalogItemCategoryHandler>();
             services.AddSingleton<AspireAPI.Generated.Handlers.ListCertificationHandler>();
@@ -85,9 +85,9 @@ namespace AspireAPI.Generated
             services.AddSingleton<AspireAPI.Generated.Handlers.ListEquipmentSizeHandler>();
             services.AddSingleton<AspireAPI.Generated.Handlers.ListInventoryLocationHandler>();
             services.AddSingleton<AspireAPI.Generated.Handlers.ListInvoiceHandler>();
-            services.AddSingleton<AspireAPI.Generated.Handlers.ListInvoiceBatcheHandler>();
+            services.AddSingleton<AspireAPI.Generated.Handlers.ListInvoiceBatchHandler>();
             services.AddSingleton<AspireAPI.Generated.Handlers.ListInvoiceRevenueHandler>();
-            services.AddSingleton<AspireAPI.Generated.Handlers.ListInvoiceTaxeHandler>();
+            services.AddSingleton<AspireAPI.Generated.Handlers.ListInvoiceTaxHandler>();
             services.AddSingleton<AspireAPI.Generated.Handlers.ListItemAllocationHandler>();
             services.AddSingleton<AspireAPI.Generated.Handlers.ListJobHandler>();
             services.AddSingleton<AspireAPI.Generated.Handlers.ListJobStatusHandler>();
@@ -215,7 +215,7 @@ namespace AspireAPI.Generated
             services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListAttachmentToolDefinition>();
             services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListAttachmentTypeToolDefinition>();
             services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListBankDepositToolDefinition>();
-            services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListBrancheToolDefinition>();
+            services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListBranchToolDefinition>();
             services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListCatalogItemToolDefinition>();
             services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListCatalogItemCategoryToolDefinition>();
             services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListCertificationToolDefinition>();
@@ -243,9 +243,9 @@ namespace AspireAPI.Generated
             services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListEquipmentSizeToolDefinition>();
             services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListInventoryLocationToolDefinition>();
             services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListInvoiceToolDefinition>();
-            services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListInvoiceBatcheToolDefinition>();
+            services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListInvoiceBatchToolDefinition>();
             services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListInvoiceRevenueToolDefinition>();
-            services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListInvoiceTaxeToolDefinition>();
+            services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListInvoiceTaxToolDefinition>();
             services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListItemAllocationToolDefinition>();
             services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListJobToolDefinition>();
             services.AddSingleton<AspireAPI.IToolDefinition, AspireAPI.Generated.ToolDefinitions.ListJobStatusToolDefinition>();

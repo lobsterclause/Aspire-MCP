@@ -6,10 +6,10 @@ using AspireAPI.Generated;
 
 namespace AspireAPI.Generated.Handlers
 {
-    public sealed class ListInvoiceTaxeHandler : GeneratedHandler
+    public sealed class ListInvoiceTaxHandler : GeneratedHandler
     {
-        public ListInvoiceTaxeHandler(
-            ILogger<ListInvoiceTaxeHandler> logger,
+        public ListInvoiceTaxHandler(
+            ILogger<ListInvoiceTaxHandler> logger,
             IHttpClientFactory httpClientFactory,
             AspireApiHelpers apiHelpers,
             AspireGenericClient client)

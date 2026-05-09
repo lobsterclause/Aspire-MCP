@@ -108,11 +108,23 @@ def derive_tool_name(path: str, method: str, has_path_id: bool) -> str:
 
 
 def singularize_for_list(name: str) -> str:
-    """Light-touch singular: Contacts->Contact, Properties->Property, WorkersComps->WorkersComp."""
+    """Light-touch singular for resource names. Examples:
+    Contacts->Contact, Properties->Property, Branches->Branch, Statuses->Status,
+    Taxes->Tax, Boxes->Box, Bushes->Bush, Sizes->Size, WorkersComps->WorkersComp.
+    The English -es rule (Tax+es, Branch+es) only kicks in when stripping "es"
+    leaves a stem ending in s/x/z/ch/sh — otherwise we strip just the trailing s,
+    which avoids Sizes->Siz."""
     if name.endswith("ies"):
         return name[:-3] + "y"
-    if name.endswith("ses"):
-        return name[:-2]  # Statuses -> Status
+    if name.endswith("es") and len(name) > 2:
+        stem = name[:-2]
+        # English plural -es: stems ending in s/x/ch/sh add "es" (Tax→Taxes,
+        # Branch→Branches, Bush→Bushes, Status→Statuses). We deliberately omit
+        # "z" because both Quiz→Quizzes and Size→Sizes are valid English plurals
+        # and "Size" is the more likely Aspire resource shape; "Sizes" therefore
+        # falls through to the trailing-s rule below and becomes "Size".
+        if stem.endswith(("s", "x", "ch", "sh")):
+            return stem
     if name.endswith("s") and not name.endswith("ss"):
         return name[:-1]
     return name

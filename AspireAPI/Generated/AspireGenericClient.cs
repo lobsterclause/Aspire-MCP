@@ -81,9 +81,13 @@ namespace AspireAPI.Generated
 
             if (!response.IsSuccessStatusCode)
             {
-                _logger.LogWarning("Aspire API non-success: {Status} {Method} {Url}", (int)response.StatusCode, method, url);
+                // Log the full body for operators (server-side visibility) but keep the
+                // exception message terse — exception messages may bubble up to MCP clients.
+                _logger.LogWarning(
+                    "Aspire API non-success: {Status} {Method} {Url} — body: {Body}",
+                    (int)response.StatusCode, method, url, responseBody);
                 throw new HttpRequestException(
-                    $"Aspire API {method} {path} returned {(int)response.StatusCode} {response.ReasonPhrase}: {responseBody}");
+                    $"Aspire API {method} {path} returned {(int)response.StatusCode} {response.ReasonPhrase}.");
             }
 
             return responseBody;
@@ -100,17 +104,36 @@ namespace AspireAPI.Generated
             return string.IsNullOrEmpty(qs) ? baseUrl + p : $"{baseUrl}{p}?{qs}";
         }
 
+        // Hosts treated as sandbox/non-production. Anything else with a youraspire.com
+        // suffix is treated as production. Unknown hosts (custom proxies, mocks, localhost)
+        // are also treated as non-production — the guard exists to protect Aspire's prod
+        // tenant, not arbitrary endpoints. Compared against the URL host only, so query
+        // strings and path segments cannot influence the decision.
+        private static readonly HashSet<string> SandboxHosts = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "cloudsandbox-api.youraspire.com",
+            "sandbox-api.youraspire.com",
+        };
+        private static readonly HashSet<string> ProductionHosts = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "cloud-api.youraspire.com",
+            "api.youraspire.com",
+        };
+
         /// <summary>
-        /// Refuse to send mutating requests at the production host unless the operator
-        /// has set ASPIRE_ALLOW_PROD_WRITES=1. The base URL is treated as production
-        /// when it does not contain "sandbox".
+        /// Refuse to send mutating requests at a known Aspire production host unless
+        /// the operator has set ASPIRE_ALLOW_PROD_WRITES=1. Host membership is matched
+        /// against an explicit allowlist — earlier substring matching ("sandbox") was
+        /// fragile against adversarial hostnames like sandbox-prod.youraspire.com.
         /// </summary>
         private void EnforceProdWriteGuard(string method)
         {
             if (!MutatingMethods.Contains(method)) return;
-            var baseUrl = (_options.BaseUrl ?? string.Empty).ToLowerInvariant();
-            var isProd = !baseUrl.Contains("sandbox");
-            if (!isProd) return;
+            if (string.IsNullOrWhiteSpace(_options.BaseUrl)) return;
+            if (!Uri.TryCreate(_options.BaseUrl, UriKind.Absolute, out var uri)) return;
+            var host = uri.Host;
+            if (SandboxHosts.Contains(host)) return;
+            if (!ProductionHosts.Contains(host)) return; // unknown host => not Aspire prod
             var allow = Environment.GetEnvironmentVariable("ASPIRE_ALLOW_PROD_WRITES");
             if (string.Equals(allow, "1", StringComparison.Ordinal) ||
                 string.Equals(allow, "true", StringComparison.OrdinalIgnoreCase))
@@ -118,9 +141,9 @@ namespace AspireAPI.Generated
                 return;
             }
             throw new InvalidOperationException(
-                $"Refusing {method} request: BaseUrl '{_options.BaseUrl}' is the production Aspire API and " +
-                "ASPIRE_ALLOW_PROD_WRITES is not set to '1'. Point BaseUrl at the sandbox or " +
-                "set ASPIRE_ALLOW_PROD_WRITES=1 to authorize production writes.");
+                $"Refusing {method} request: host '{host}' is a known Aspire production endpoint and " +
+                "ASPIRE_ALLOW_PROD_WRITES is not set to '1'. Point BaseUrl at the sandbox host " +
+                "(cloudsandbox-api.youraspire.com) or set ASPIRE_ALLOW_PROD_WRITES=1 to authorize production writes.");
         }
     }
 }

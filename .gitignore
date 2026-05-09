@@ -19,3 +19,7 @@ Thumbs.db
 
 # Local toolchain
 .dotnet/
+
+# Python codegen cache
+__pycache__/
+*.pyc

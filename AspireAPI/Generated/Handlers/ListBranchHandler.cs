@@ -6,17 +6,17 @@ using AspireAPI.Generated;
 
 namespace AspireAPI.Generated.Handlers
 {
-    public sealed class ListInvoiceBatcheHandler : GeneratedHandler
+    public sealed class ListBranchHandler : GeneratedHandler
     {
-        public ListInvoiceBatcheHandler(
-            ILogger<ListInvoiceBatcheHandler> logger,
+        public ListBranchHandler(
+            ILogger<ListBranchHandler> logger,
             IHttpClientFactory httpClientFactory,
             AspireApiHelpers apiHelpers,
             AspireGenericClient client)
             : base(logger, httpClientFactory, apiHelpers, client) { }
 
         protected override string HttpMethod => "GET";
-        protected override string PathTemplate => "/InvoiceBatches";
+        protected override string PathTemplate => "/Branches";
         protected override IReadOnlyList<string> PathParameterNames { get; } = System.Array.Empty<string>();
         protected override IReadOnlyList<string> QueryParameterNames { get; } = new string[] { "$select", "$filter", "$expand", "$orderby", "$skip", "$top", "$pageNumber", "$limit", "api-version" };
     }

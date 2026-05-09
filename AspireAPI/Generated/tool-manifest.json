@@ -580,7 +580,7 @@
       "acceptsBody": false
     },
     {
-      "name": "ListBranche",
+      "name": "ListBranch",
       "method": "GET",
       "path": "/Branches",
       "description": "[GET /Branches] GET /Branches",
@@ -1112,7 +1112,7 @@
       "acceptsBody": false
     },
     {
-      "name": "ListInvoiceBatche",
+      "name": "ListInvoiceBatch",
       "method": "GET",
       "path": "/InvoiceBatches",
       "description": "[GET /InvoiceBatches] GET /InvoiceBatches",
@@ -1150,7 +1150,7 @@
       "acceptsBody": false
     },
     {
-      "name": "ListInvoiceTaxe",
+      "name": "ListInvoiceTax",
       "method": "GET",
       "path": "/InvoiceTaxes",
       "description": "[GET /InvoiceTaxes] GET /InvoiceTaxes",

@@ -63,6 +63,11 @@ namespace AspireAPI.Generated
 
                 return CreateResponse(responseBody);
             }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                // Honor cancellation — never wrap as a tool-level error.
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in {Tool} ({Method} {Path})", GetType().Name, HttpMethod, PathTemplate);

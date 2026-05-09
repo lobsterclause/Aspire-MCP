@@ -55,7 +55,7 @@ public partial class AspireMcpServer
             _toolRouter.RegisterTool("ListAttachment", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListAttachmentHandler>());
             _toolRouter.RegisterTool("ListAttachmentType", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListAttachmentTypeHandler>());
             _toolRouter.RegisterTool("ListBankDeposit", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListBankDepositHandler>());
-            _toolRouter.RegisterTool("ListBranche", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListBrancheHandler>());
+            _toolRouter.RegisterTool("ListBranch", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListBranchHandler>());
             _toolRouter.RegisterTool("ListCatalogItem", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListCatalogItemHandler>());
             _toolRouter.RegisterTool("ListCatalogItemCategory", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListCatalogItemCategoryHandler>());
             _toolRouter.RegisterTool("ListCertification", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListCertificationHandler>());
@@ -83,9 +83,9 @@ public partial class AspireMcpServer
             _toolRouter.RegisterTool("ListEquipmentSize", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListEquipmentSizeHandler>());
             _toolRouter.RegisterTool("ListInventoryLocation", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListInventoryLocationHandler>());
             _toolRouter.RegisterTool("ListInvoice", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListInvoiceHandler>());
-            _toolRouter.RegisterTool("ListInvoiceBatche", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListInvoiceBatcheHandler>());
+            _toolRouter.RegisterTool("ListInvoiceBatch", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListInvoiceBatchHandler>());
             _toolRouter.RegisterTool("ListInvoiceRevenue", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListInvoiceRevenueHandler>());
-            _toolRouter.RegisterTool("ListInvoiceTaxe", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListInvoiceTaxeHandler>());
+            _toolRouter.RegisterTool("ListInvoiceTax", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListInvoiceTaxHandler>());
             _toolRouter.RegisterTool("ListItemAllocation", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListItemAllocationHandler>());
             _toolRouter.RegisterTool("ListJob", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListJobHandler>());
             _toolRouter.RegisterTool("ListJobStatus", sp => sp.GetRequiredService<AspireAPI.Generated.Handlers.ListJobStatusHandler>());

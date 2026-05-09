@@ -1,46 +1,23 @@
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using NJsonSchema;
-using NJsonSchema.Generation;
 
 namespace AspireAPI.ToolDefinitions
 {
-    public class ListContactsToolDefinition : IToolDefinition
+    /// <summary>
+    /// Back-compat alias for the generated ListContact tool. Schema mirrors
+    /// <see cref="AspireAPI.Handlers.ListContactsHandler"/>: GET /Contacts with
+    /// OData query support. The legacy (type, search, pageNumber, pageSize)
+    /// schema was retired together with the broken DataFetchService-based
+    /// handler; clients should migrate to OData expressions
+    /// (e.g. $filter=Type eq 'customer', $top, $skip).
+    /// </summary>
+    public sealed class ListContactsToolDefinition : IToolDefinition
     {
         public string Name => "ListContacts";
-        public string Description => "List contacts filtered by type (customer, vendor, employee, or all) with optional search";
+        public string Description => "GET /Contacts with OData query support (back-compat alias for ListContact).";
 
-        /// <summary>
-        /// Input model for ListContacts tool
-        /// </summary>
-        public class ListContactsInput
-        {
-            [JsonPropertyName("type")]
-            [Description("Type of contacts to list")]
-            [Required]
-            public string Type { get; set; }
-            
-            [JsonPropertyName("search")]
-            [Description("Search term to filter contacts (optional)")]
-            public string Search { get; set; }
-            
-            [JsonPropertyName("pageNumber")]
-            [Description("Page number for pagination (default: 1)")]
-            public int? PageNumber { get; set; }
-            
-            [JsonPropertyName("pageSize")]
-            [Description("Page size for pagination (default: 50)")]
-            public int? PageSize { get; set; }
-        }
-
-        public async Task<JsonSchema> GetSchemaAsync(CancellationToken cancellationToken = default)
-        {
-            // Use proper NJsonSchema approach to generate schema from type
-            return await Task.FromResult(JsonSchema.FromType<ListContactsInput>(new JsonSchemaGeneratorSettings { GenerateExamples = true }));
-        }
+        public Task<JsonSchema> GetSchemaAsync(CancellationToken cancellationToken = default)
+            => JsonSchema.FromJsonAsync(BackCompatToolSchemas.OdataCollectionSchema, cancellationToken);
     }
 }

@@ -74,6 +74,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Embed the admin web UI's HTML so it ships inside the assembly and the
+         binary stays self-contained — no extra wwwroot to deploy. -->
+    <EmbeddedResource Include="AdminWeb/admin.html" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />

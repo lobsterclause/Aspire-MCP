@@ -7,14 +7,21 @@ using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using ModelContextProtocol.Server;
 using ModelContextProtocol.Protocol.Types;
 using ModelContextProtocol.Protocol.Transport;
+using System.Net;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
+using System.Linq;
+using AspireAPI.AdminWeb;
 using AspireAPI.Services;
 using AspireAPI.Handlers;
 using AspireAPI.ToolDefinitions;
@@ -24,40 +31,110 @@ namespace AspireAPI;
 
 public class Program
 {
+    private const int DefaultAdminPort = 5050;
+
     public static async Task Main(string[] args)
     {
+        // Two run modes:
+        //   default              -> stdio MCP server (what MCP clients launch)
+        //   --admin [--port N]   -> local web admin UI for editing appsettings.Local.json
+        // The admin UI binds 127.0.0.1 only and has no auth — it must never be
+        // exposed on a network. The two modes are mutually exclusive so the
+        // admin port can never collide with another instance launched by an
+        // MCP client.
+        var adminMode = args.Any(a => a == "--admin");
+        if (adminMode)
+        {
+            await RunAdminAsync(args);
+        }
+        else
+        {
+            await RunMcpAsync(args);
+        }
+    }
+
+    private static async Task RunMcpAsync(string[] args)
+    {
         var builder = Host.CreateApplicationBuilder(args);
-        
-        // Configure options from appsettings.json
-        builder.Services.Configure<AspireApiOptions>(
-            builder.Configuration.GetSection("AspireApi"));
-        builder.Services.Configure<CacheConfig>(
-            builder.Configuration.GetSection("CacheConfig"));
-            
+        ConfigureSharedServices(builder.Services, builder.Configuration);
+        // Wire the MCP server only in stdio mode — admin mode doesn't need it.
+        builder.Services.AddSingleton<AspireMcpServer>();
+        builder.Services.AddHostedService<AspireMcpServerHostedService>();
+        var host = builder.Build();
+        await host.RunAsync();
+    }
+
+    private static async Task RunAdminAsync(string[] args)
+    {
+        var port = ParsePortArg(args) ?? DefaultAdminPort;
+        var builder = WebApplication.CreateBuilder(args);
+
+        // Load Local.json so the admin UI sees current values when re-opened.
+        builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: false);
+
+        // Bind to localhost only — admin UI is unauthenticated and surfaces
+        // credentials. Refuse to listen on any other interface.
+        builder.WebHost.ConfigureKestrel(opts =>
+        {
+            opts.Listen(IPAddress.Loopback, port);
+        });
+
+        ConfigureSharedServices(builder.Services, builder.Configuration);
+
+        builder.Services.AddSingleton(_ => new LocalSettingsStore(builder.Environment.ContentRootPath));
+
+        var app = builder.Build();
+        app.MapAdminEndpoints();
+
+        Console.Error.WriteLine($"[aspire-mcp] admin UI listening on http://127.0.0.1:{port}/admin");
+        await app.RunAsync();
+    }
+
+    private static int? ParsePortArg(string[] args)
+    {
+        for (var i = 0; i < args.Length - 1; i++)
+        {
+            if (args[i] == "--port" && int.TryParse(args[i + 1], out var p) && p > 0 && p <= 65535)
+            {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    private static void ConfigureSharedServices(IServiceCollection services, IConfiguration configuration)
+    {
+        // Configure options from appsettings.json (and Local override added in admin mode).
+        services.Configure<AspireApiOptions>(configuration.GetSection("AspireApi"));
+        services.Configure<CacheConfig>(configuration.GetSection("CacheConfig"));
+
         // Add essential services
-        builder.Services.AddMemoryCache();
-        builder.Services.AddSingleton<TokenService>();
-        
+        services.AddMemoryCache();
+        services.AddSingleton<TokenService>();
+
         // Configure named HttpClient for AspireAPI
-        builder.Services.AddHttpClient("AspireAPI", (serviceProvider, client) =>
+        services.AddHttpClient("AspireAPI", (serviceProvider, client) =>
         {
             var options = serviceProvider.GetRequiredService<IOptions<AspireApiOptions>>().Value;
-            client.BaseAddress = new Uri(options.BaseUrl);
+            if (!string.IsNullOrWhiteSpace(options.BaseUrl))
+            {
+                client.BaseAddress = new Uri(options.BaseUrl);
+            }
             client.Timeout = TimeSpan.FromSeconds(options.Timeouts.RequestTimeoutSeconds);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
         });
-        
+
         // Add general HttpClient
-        builder.Services.AddHttpClient();
+        services.AddHttpClient();
 
         // Add distributed caching if configured
-        var useRedisCache = builder.Configuration.GetValue<bool>("CacheConfig:UseDistributedCaching");
+        var useRedisCache = configuration.GetValue<bool>("CacheConfig:UseDistributedCaching");
         if (useRedisCache)
         {
-            var redisConnection = builder.Configuration.GetValue<string>("Redis:ConnectionString");
+            var redisConnection = configuration.GetValue<string>("Redis:ConnectionString");
             if (!string.IsNullOrEmpty(redisConnection))
             {
-                builder.Services.AddStackExchangeRedisCache(options =>
+                services.AddStackExchangeRedisCache(options =>
                 {
                     options.Configuration = redisConnection;
                     options.InstanceName = "AspireMCP:";
@@ -65,53 +142,36 @@ public class Program
             }
             else
             {
-                 // Fallback to memory cache if Redis is configured but connection string is missing
-                 builder.Services.AddDistributedMemoryCache();
-                 var logger = builder.Services.BuildServiceProvider().GetService<ILogger<Program>>();
-                 logger?.LogWarning("Redis caching enabled but connection string is missing. Falling back to distributed memory cache.");
+                services.AddDistributedMemoryCache();
             }
         }
         else
         {
-             // Use distributed memory cache if Redis is not configured
-             builder.Services.AddDistributedMemoryCache();
+            services.AddDistributedMemoryCache();
         }
-        
+
         // Add core services
-        builder.Services.AddSingleton<AdvancedCachingService>();
-        builder.Services.AddSingleton<CacheManager>();
-        builder.Services.AddSingleton<AdvancedFilterService>();
-        builder.Services.AddSingleton<AspireApiHelpers>();
-        builder.Services.AddSingleton<AspireApiService>();
-        
+        services.AddSingleton<AdvancedCachingService>();
+        services.AddSingleton<CacheManager>();
+        services.AddSingleton<AdvancedFilterService>();
+        services.AddSingleton<AspireApiHelpers>();
+        services.AddSingleton<AspireApiService>();
+
         // Register all handlers
-        builder.Services.AddSingleton<ListPaymentsHandler>();
-        builder.Services.AddSingleton<ListPropertiesHandler>();
-        builder.Services.AddSingleton<ListContactsHandler>();
-        builder.Services.AddSingleton<ListJobsHandler>();
-        
+        services.AddSingleton<ListPaymentsHandler>();
+        services.AddSingleton<ListPropertiesHandler>();
+        services.AddSingleton<ListContactsHandler>();
+        services.AddSingleton<ListJobsHandler>();
+
         // Register all tool definitions
-        builder.Services.AddSingleton<IToolDefinition, ListPaymentsToolDefinition>();
-        builder.Services.AddSingleton<IToolDefinition, ListPropertiesToolDefinition>();
-        builder.Services.AddSingleton<IToolDefinition, ListContactsToolDefinition>();
-        builder.Services.AddSingleton<IToolDefinition, ListJobsToolDefinition>();
+        services.AddSingleton<IToolDefinition, ListPaymentsToolDefinition>();
+        services.AddSingleton<IToolDefinition, ListPropertiesToolDefinition>();
+        services.AddSingleton<IToolDefinition, ListContactsToolDefinition>();
+        services.AddSingleton<IToolDefinition, ListJobsToolDefinition>();
 
         // Register the code-generated tool surface (every endpoint in the Aspire OpenAPI spec).
-        builder.Services.AddGeneratedAspireTools();
-
-        // Add the MCP server
-        builder.Services.AddSingleton<AspireMcpServer>();
-        builder.Services.AddHostedService<AspireMcpServerHostedService>();
-
-        // Create the host
-        var host = builder.Build();
-        
-        // Run the host
-        await host.RunAsync();
+        services.AddGeneratedAspireTools();
     }
-    
-    // Removed PrimeCacheAsync method
-    // Removed WebAppHostedService class
 }
 
 public class AspireMcpServerHostedService : IHostedService
@@ -127,13 +187,13 @@ public class AspireMcpServerHostedService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Starting Minimal Aspire MCP Server (ListPayments only)...");
+        _logger.LogInformation("Starting Aspire MCP Server (stdio transport)…");
         await _server.StartAsync(cancellationToken);
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Stopping Minimal Aspire MCP Server...");
+        _logger.LogInformation("Stopping Aspire MCP Server…");
         await _server.StopAsync(cancellationToken);
     }
 }

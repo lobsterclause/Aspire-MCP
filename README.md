@@ -31,9 +31,29 @@ There, **Create Client** to mint a `ClientId` / `ClientSecret` pair, choose the
 scopes the integration needs, and toggle **Active** on. The same screen lists
 the username + company key the OAuth flow needs.
 
-### appsettings.Development.json
+### Option A: web admin UI (recommended)
 
-Create this file (it's gitignored — never commit credentials):
+Run the binary in admin mode and edit settings in your browser:
+
+```bash
+cd AspireAPI
+dotnet run -- --admin           # binds 127.0.0.1:5050 by default
+# or:  dotnet run -- --admin --port 5060
+```
+
+Open <http://127.0.0.1:5050/admin>. The UI writes
+`AspireAPI/appsettings.Local.json` (gitignored). The MCP server reads it on
+next launch — no restart of the admin process is needed; restart your
+**MCP client** (e.g. Claude Desktop) so it relaunches the stdio binary
+with the new config.
+
+The admin UI is local-only by design (binds 127.0.0.1, no auth) and must
+never be exposed on a network you don't trust.
+
+### Option B: hand-edit appsettings.Local.json
+
+If you'd rather skip the UI, create `AspireAPI/appsettings.Local.json`
+(gitignored — never commit credentials):
 
 ```jsonc
 {

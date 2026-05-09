@@ -192,10 +192,12 @@ public class Program
         services.AddSingleton<GetCustomer360Handler>();
         services.AddSingleton<RenderScheduleBoardHandler>();
         services.AddSingleton<ListChangedSinceHandler>();
+        services.AddSingleton<SearchAspireHandler>();
         services.AddSingleton<IToolDefinition, GetJobLifecycleToolDefinition>();
         services.AddSingleton<IToolDefinition, GetCustomer360ToolDefinition>();
         services.AddSingleton<IToolDefinition, RenderScheduleBoardToolDefinition>();
         services.AddSingleton<IToolDefinition, ListChangedSinceToolDefinition>();
+        services.AddSingleton<IToolDefinition, SearchAspireToolDefinition>();
 
         // Operator-facing infrastructure (consumed by both stdio + admin modes):
         // - allowlist gates ListTools and CallTool so disabling a tool from the
@@ -223,6 +225,7 @@ public class Program
             router.RegisterTool("GetCustomer360", p => p.GetRequiredService<GetCustomer360Handler>());
             router.RegisterTool("RenderScheduleBoard", p => p.GetRequiredService<RenderScheduleBoardHandler>());
             router.RegisterTool("ListChangedSince", p => p.GetRequiredService<ListChangedSinceHandler>());
+            router.RegisterTool("SearchAspire", p => p.GetRequiredService<SearchAspireHandler>());
             router.RegisterGeneratedTools(sp);
             return router;
         });

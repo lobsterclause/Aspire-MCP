@@ -35,6 +35,20 @@ namespace AspireAPI
         /// Gets or sets the OAuth server URL
         /// </summary>
         public string OAuthServerUrl { get; set; }
+
+        /// <summary>
+        /// Anthropic API key used by the SearchAspire composition tool to route
+        /// natural-language queries onto the right List* endpoint. Optional;
+        /// SearchAspire returns a helpful error when unset. ANTHROPIC_API_KEY
+        /// in the environment overrides this.
+        /// </summary>
+        public string? AnthropicApiKey { get; set; }
+
+        /// <summary>
+        /// Optional override for the router model used by SearchAspire.
+        /// Defaults to claude-haiku-4-5.
+        /// </summary>
+        public string? AnthropicRouterModel { get; set; }
         
         /// <summary>
         /// Gets or sets the authentication configuration

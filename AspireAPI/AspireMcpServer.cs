@@ -115,22 +115,6 @@ public partial class AspireMcpServer
         };
     }
 
-    /// <summary>
-    /// Register tools explicitly (this is a backup method in case RegisterToolHandlers isn't called)
-    /// </summary>
-    private void RegisterTools()
-    {
-        // Register all activated tools
-        _toolRouter.RegisterTool("ListPayments", provider =>
-            _serviceProvider.GetRequiredService<ListPaymentsHandler>());
-        _toolRouter.RegisterTool("ListProperties", provider =>
-            _serviceProvider.GetRequiredService<ListPropertiesHandler>());
-        _toolRouter.RegisterTool("ListContacts", provider =>
-            _serviceProvider.GetRequiredService<ListContactsHandler>());
-        _toolRouter.RegisterTool("ListJobs", provider =>
-            _serviceProvider.GetRequiredService<ListJobsHandler>());
-    }
-
     private async Task<CallToolResponse> CallToolHandlerAsync(CallToolRequest request, CancellationToken cancellationToken)
     {
         try
@@ -178,10 +162,15 @@ public partial class AspireMcpServer
             // Return the result directly as it's already a CallToolResponse
             return result;
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // Honor MCP cancellation — bubble up to the JSON-RPC layer instead of
+            // wrapping it as a tool error.
+            throw;
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Error handling tool: {request.Params?.Name}");
-            // Return error response instead of throwing McpServerException
             return new CallToolResponse().WithError($"Error calling tool: {ex.Message}");
         }
     }

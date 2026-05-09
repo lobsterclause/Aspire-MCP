@@ -117,8 +117,13 @@ namespace AspireAPI.Generated
                 _logger.LogWarning(
                     "Aspire API non-success: {Status} {Method} {Url} — body: {Body}",
                     (int)response.StatusCode, normalizedMethod, url, responseBody);
+                // Include body in the exception so the upstream LLM can read the
+                // API's validation diagnostics ("Property X is required" etc.) and
+                // self-correct. Cap to 2KB so a runaway HTML/error page can't blow
+                // up the MCP response. Aspire error bodies are JSON and small.
+                var snippet = responseBody.Length > 2048 ? responseBody[..2048] + "…" : responseBody;
                 throw new HttpRequestException(
-                    $"Aspire API {normalizedMethod} {path} returned {(int)response.StatusCode} {response.ReasonPhrase}.");
+                    $"Aspire API {normalizedMethod} {path} returned {(int)response.StatusCode} {response.ReasonPhrase}: {snippet}");
             }
 
             return responseBody;

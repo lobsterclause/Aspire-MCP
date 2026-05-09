@@ -87,22 +87,7 @@ namespace AspireAPI.Handlers
                     useCache,
                     cancellationToken);
 
-                // Parse payments JSON into an object and return it properly
-                var paymentsObject = JsonSerializer.Deserialize<object>(payments);
-                
-                // Fix: Use the appropriate content type
-                return new CallToolResponse
-                {
-                    Content = new[]
-                    {
-                        new Content
-                        {
-                            // Use hardcoded content type since response is not in scope
-                            ContentType = response.Content.Headers.ContentType?.ToString() ?? "application/json",
-                            Text = payments
-                        }
-                    }
-                };
+                return CreateResponse(payments);
             }
             catch (Exception ex)
             {

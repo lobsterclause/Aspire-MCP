@@ -83,8 +83,8 @@ namespace AspireAPI
         /// </summary>
         public void RegisterReportingTools()
         {
-            // This will call the extension method defined in ReportingServiceRegistration.cs
-            ReportingServiceRegistration.RegisterReportingTools(this, _serviceProvider);
+            // ReportingServiceRegistration was excluded from the build pending rewrite
+            // against current NJsonSchema 10.x; reporting tools are no-ops here.
         }
     }
 }

@@ -18,6 +18,7 @@ using System;
 using AspireAPI.Services;
 using AspireAPI.Handlers;
 using AspireAPI.ToolDefinitions;
+using AspireAPI.Generated;
 
 namespace AspireAPI;
 
@@ -83,9 +84,6 @@ public class Program
         builder.Services.AddSingleton<AspireApiHelpers>();
         builder.Services.AddSingleton<AspireApiService>();
         
-        // Register DataFetchService
-        builder.Services.AddSingleton<IDataFetchService, DataFetchService>();
-        
         // Register all handlers
         builder.Services.AddSingleton<ListPaymentsHandler>();
         builder.Services.AddSingleton<ListPropertiesHandler>();
@@ -97,7 +95,10 @@ public class Program
         builder.Services.AddSingleton<IToolDefinition, ListPropertiesToolDefinition>();
         builder.Services.AddSingleton<IToolDefinition, ListContactsToolDefinition>();
         builder.Services.AddSingleton<IToolDefinition, ListJobsToolDefinition>();
-        
+
+        // Register the code-generated tool surface (every endpoint in the Aspire OpenAPI spec).
+        builder.Services.AddGeneratedAspireTools();
+
         // Add the MCP server
         builder.Services.AddSingleton<AspireMcpServer>();
         builder.Services.AddHostedService<AspireMcpServerHostedService>();

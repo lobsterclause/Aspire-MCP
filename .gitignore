@@ -1,0 +1,21 @@
+# .NET build outputs
+bin/
+obj/
+*.user
+*.suo
+*.cache
+
+# IDE
+.vs/
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Splitstream / Claude worktrees
+.claude/worktrees/
+
+# Local toolchain
+.dotnet/

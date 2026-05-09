@@ -8,6 +8,72 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!--
+      Exclude pre-existing broken scaffolds that were never wired into the router and
+      have been superseded by the code-generated tools under AspireAPI/Generated/.
+      These files reference NJsonSchema APIs (JsonSchema.FromTypeAsync,
+      JsonSchemaProperty.Required/Enum, settable JsonSchema.Properties) that do not exist
+      in the installed NJsonSchema 10.9.0 — they predate this dependency version.
+    -->
+    <Compile Remove="ToolDefinitions/BatchPaymentsProcessingToolDefinition.cs" />
+    <Compile Remove="ToolDefinitions/CreateUpdatePropertyToolDefinition.cs" />
+    <Compile Remove="ToolDefinitions/GenerateReportToolDefinition.cs" />
+    <Compile Remove="ToolDefinitions/GetScheduleBoardToolDefinition.cs" />
+    <Compile Remove="ToolDefinitions/GetTimeEntryReportToolDefinition.cs" />
+    <Compile Remove="ToolDefinitions/ListBranchesToolDefinition.cs" />
+    <Compile Remove="ToolDefinitions/ListDivisionsToolDefinition.cs" />
+    <Compile Remove="ToolDefinitions/ListEquipmentToolDefinition.cs" />
+    <Compile Remove="ToolDefinitions/ListInventoryItemsToolDefinition.cs" />
+    <Compile Remove="ToolDefinitions/ListInvoicesToolDefinition.cs" />
+    <Compile Remove="ToolDefinitions/ListOpportunitiesToolDefinition.cs" />
+    <Compile Remove="ToolDefinitions/ListPurchaseReceiptsToolDefinition.cs" />
+    <Compile Remove="ToolDefinitions/ListWorkTicketsToolDefinition.cs" />
+    <Compile Remove="ToolDefinitions/ManageReportTemplatesToolDefinition.cs" />
+    <Compile Remove="Handlers/BatchPaymentsProcessingHandler.cs" />
+    <Compile Remove="Handlers/CreateUpdatePropertyHandler.cs" />
+    <Compile Remove="Handlers/GenerateReportHandler.cs" />
+    <Compile Remove="Handlers/GetScheduleBoardHandler.cs" />
+    <Compile Remove="Handlers/GetTimeEntryReportHandler.cs" />
+    <Compile Remove="Handlers/ListDivisionsHandler.cs" />
+    <Compile Remove="Handlers/ListEquipmentHandler.cs" />
+    <Compile Remove="Handlers/ListInventoryItemsHandler.cs" />
+    <Compile Remove="Handlers/ListInvoicesHandler.cs" />
+    <Compile Remove="Handlers/ListOpportunitiesHandler.cs" />
+    <Compile Remove="Handlers/ListPurchaseReceiptsHandler.cs" />
+    <Compile Remove="Handlers/ListWorkTicketsHandler.cs" />
+    <Compile Remove="Handlers/ManageReportTemplatesHandler.cs" />
+    <Compile Remove="ComparisonToolRegistration.cs" />
+    <Compile Remove="ReportingServiceRegistration.cs" />
+    <Compile Remove="Controllers/CacheController.cs" />
+    <!-- Reporting / comparison / trend / data-export layers were only consumed by the
+         abandoned reporting tool definitions excluded above; they have their own broken
+         API drift against the current dependency set. Out of scope for this pass. -->
+    <Compile Remove="Services/ComparisonService.cs" />
+    <Compile Remove="Services/TrendService.cs" />
+    <Compile Remove="Services/DataExportService.cs" />
+    <Compile Remove="Services/DataConverterService.cs" />
+    <Compile Remove="Services/DataProcessingService.cs" />
+    <Compile Remove="Services/DataFetchService.cs" />
+    <Compile Remove="Services/IDataFetchService.cs" />
+    <Compile Remove="Services/EntityConverterService.cs" />
+    <Compile Remove="Services/EntitySearchers.cs" />
+    <Compile Remove="Services/EntitySearcherBase.cs" />
+    <Compile Remove="Services/RelationshipFinders.cs" />
+    <Compile Remove="Services/MetricCalculationService.cs" />
+    <Compile Remove="Services/ReportService.cs" />
+    <Compile Remove="Services/ReportTemplateService.cs" />
+    <Compile Remove="Services/ReportOutputService.cs" />
+    <Compile Remove="Services/ReportVisualizationService.cs" />
+    <Compile Remove="Services/DateRangeService.cs" />
+    <Compile Remove="Services/ParameterParserService.cs" />
+    <Compile Remove="Comparison/**/*.cs" />
+    <Compile Remove="Trend/**/*.cs" />
+    <Compile Remove="Workflow/**/*.cs" />
+    <Compile Remove="Models/McpModels.cs" />
+    <Compile Remove="Class1.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />

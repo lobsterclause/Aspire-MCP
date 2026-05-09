@@ -19,17 +19,14 @@ public partial class AspireMcpServer
     /// </summary>
     private void RegisterToolHandlers()
     {
-        // Register the activated tools
+        // Register the activated hand-written tools
         _toolRouter.RegisterTool("ListPayments", provider => _listPaymentsHandler);
         _toolRouter.RegisterTool("ListProperties", provider => _listPropertiesHandler);
         _toolRouter.RegisterTool("ListContacts", provider => _listContactsHandler);
         _toolRouter.RegisterTool("ListJobs", provider => _listJobsHandler);
-        
-        // Other tools can be registered as needed
-        // _toolRouter.RegisterToolHandler("GetTimeEntryReport", HandleGetTimeEntryReportAsync);
-        // _toolRouter.RegisterToolHandler("ListDivisions", HandleListDivisionsAsync);
-        // _toolRouter.RegisterToolHandler("ListOpportunities", HandleListOpportunitiesAsync);
-        // ...
+
+        // Register every code-generated tool (one per Aspire OpenAPI operation).
+        RegisterGeneratedTools();
     }
 
     /// <summary>

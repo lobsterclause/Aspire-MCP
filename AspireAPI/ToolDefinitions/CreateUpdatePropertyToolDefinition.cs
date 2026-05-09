@@ -35,7 +35,7 @@ namespace AspireAPI.ToolDefinitions
         public string Name => "CreateUpdateProperty"; // Keep name for potential reference
         public string Description => "STUB - Creates or updates a property record.";
 
-        public async Task<JsonSchema> GetSchemaAsync(IServiceProvider serviceProvider)
+        public async Task<JsonSchema> GetSchemaAsync(CancellationToken cancellationToken = default)
         {
             return await JsonSchema.FromTypeAsync<CreateUpdatePropertyInput>(new JsonSchemaGeneratorSettings { GenerateExamples = true });
         }

@@ -1,0 +1,2513 @@
+{
+  "generatedToolCount": 158,
+  "excludedHandwritten": [
+    "ListContacts",
+    "ListJobs",
+    "ListPayments",
+    "ListProperties"
+  ],
+  "excludedPaths": [
+    "/Authorization",
+    "/Authorization/RefreshToken"
+  ],
+  "tools": [
+    {
+      "name": "CreateAttachment",
+      "method": "POST",
+      "path": "/Attachments",
+      "description": "[POST /Attachments] POST /Attachments",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateCatalogItem",
+      "method": "POST",
+      "path": "/CatalogItems",
+      "description": "[POST /CatalogItems] POST /CatalogItems",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateClockTime",
+      "method": "POST",
+      "path": "/ClockTimes",
+      "description": "[POST /ClockTimes] POST /ClockTimes",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateCompany",
+      "method": "POST",
+      "path": "/Companies",
+      "description": "[POST /Companies] POST /Companies",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateContact",
+      "method": "POST",
+      "path": "/Contacts",
+      "description": "[POST /Contacts] POST /Contacts",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateContactCustomField",
+      "method": "POST",
+      "path": "/ContactCustomFields",
+      "description": "[POST /ContactCustomFields] POST /ContactCustomFields",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateEquipmentReadingLog",
+      "method": "POST",
+      "path": "/EquipmentReadingLogs",
+      "description": "[POST /EquipmentReadingLogs] POST /EquipmentReadingLogs",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateIssue",
+      "method": "POST",
+      "path": "/Issues",
+      "description": "[POST /Issues] POST /Issues",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateItemAllocation",
+      "method": "POST",
+      "path": "/ItemAllocations",
+      "description": "[POST /ItemAllocations] POST /ItemAllocations",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateLocality",
+      "method": "POST",
+      "path": "/Localities",
+      "description": "[POST /Localities] POST /Localities",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateOpportunity",
+      "method": "POST",
+      "path": "/Opportunities",
+      "description": "[POST /Opportunities] POST /Opportunities",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateOpportunityLostReason",
+      "method": "POST",
+      "path": "/OpportunityLostReasons",
+      "description": "[POST /OpportunityLostReasons] POST /OpportunityLostReasons",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateOpportunityTag",
+      "method": "POST",
+      "path": "/OpportunityTags",
+      "description": "[POST /OpportunityTags] POST /OpportunityTags",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreatePartialPayment",
+      "method": "POST",
+      "path": "/PartialPayments",
+      "description": "[POST /PartialPayments] POST /PartialPayments",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreatePayCode",
+      "method": "POST",
+      "path": "/PayCodes",
+      "description": "[POST /PayCodes] POST /PayCodes",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreatePayRate",
+      "method": "POST",
+      "path": "/PayRates",
+      "description": "[POST /PayRates] POST /PayRates",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreatePayRateOverridePayCode",
+      "method": "POST",
+      "path": "/PayRateOverridePayCodes",
+      "description": "[POST /PayRateOverridePayCodes] POST /PayRateOverridePayCodes",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreatePaySchedule",
+      "method": "POST",
+      "path": "/PaySchedules",
+      "description": "[POST /PaySchedules] POST /PaySchedules",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateProperty",
+      "method": "POST",
+      "path": "/Properties",
+      "description": "[POST /Properties] POST /Properties",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreatePropertyAvailability",
+      "method": "POST",
+      "path": "/PropertyAvailabilities",
+      "description": "[POST /PropertyAvailabilities] POST /PropertyAvailabilities",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreatePropertyContact",
+      "method": "POST",
+      "path": "/PropertyContacts",
+      "description": "[POST /PropertyContacts] POST /PropertyContacts",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreatePropertyCustomField",
+      "method": "POST",
+      "path": "/PropertyCustomFields",
+      "description": "[POST /PropertyCustomFields] POST /PropertyCustomFields",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateReceipt",
+      "method": "POST",
+      "path": "/Receipts",
+      "description": "[POST /Receipts] POST /Receipts",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateService",
+      "method": "POST",
+      "path": "/Services",
+      "description": "[POST /Services] POST /Services",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateServiceTaxOverride",
+      "method": "POST",
+      "path": "/ServiceTaxOverrides",
+      "description": "[POST /ServiceTaxOverrides] POST /ServiceTaxOverrides",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateTask",
+      "method": "POST",
+      "path": "/Tasks",
+      "description": "[POST /Tasks] POST /Tasks",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateTaxEntity",
+      "method": "POST",
+      "path": "/TaxEntities",
+      "description": "[POST /TaxEntities] POST /TaxEntities",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateTaxJurisdiction",
+      "method": "POST",
+      "path": "/TaxJurisdictions",
+      "description": "[POST /TaxJurisdictions] POST /TaxJurisdictions",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateUnitType",
+      "method": "POST",
+      "path": "/UnitTypes",
+      "description": "[POST /UnitTypes] POST /UnitTypes",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateUser",
+      "method": "POST",
+      "path": "/Users",
+      "description": "[POST /Users] POST /Users",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateVendor",
+      "method": "POST",
+      "path": "/Vendors",
+      "description": "[POST /Vendors] POST /Vendors",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateWorkTicketTime",
+      "method": "POST",
+      "path": "/WorkTicketTimes",
+      "description": "[POST /WorkTicketTimes] POST /WorkTicketTimes",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "CreateWorkersComp",
+      "method": "POST",
+      "path": "/WorkersComps",
+      "description": "[POST /WorkersComps] POST /WorkersComps",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "DeleteOpportunityTag",
+      "method": "DELETE",
+      "path": "/OpportunityTags/{id}",
+      "description": "[DELETE /OpportunityTags/{id}] DELETE /OpportunityTags/{id}",
+      "pathParams": [
+        "id"
+      ],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "GetAttachmentsAttachmentFileData",
+      "method": "GET",
+      "path": "/Attachments/AttachmentFileData",
+      "description": "[GET /Attachments/AttachmentFileData] GET /Attachments/AttachmentFileData",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "GetAttachmentsNewLink",
+      "method": "GET",
+      "path": "/Attachments/NewLink",
+      "description": "[GET /Attachments/NewLink] GET /Attachments/NewLink",
+      "pathParams": [],
+      "queryParams": [
+        "link",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "GetVersionGetApiVersion",
+      "method": "GET",
+      "path": "/Version/GetApiVersion",
+      "description": "[GET /Version/GetApiVersion] GET /Version/GetApiVersion",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListActivity",
+      "method": "GET",
+      "path": "/Activities",
+      "description": "[GET /Activities] GET /Activities",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListActivityCategory",
+      "method": "GET",
+      "path": "/ActivityCategories",
+      "description": "[GET /ActivityCategories] GET /ActivityCategories",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListActivityCommentHistory",
+      "method": "GET",
+      "path": "/ActivityCommentHistories",
+      "description": "[GET /ActivityCommentHistories] GET /ActivityCommentHistories",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListActivityContact",
+      "method": "GET",
+      "path": "/ActivityContacts",
+      "description": "[GET /ActivityContacts] GET /ActivityContacts",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListAddress",
+      "method": "GET",
+      "path": "/Addresses",
+      "description": "[GET /Addresses] GET /Addresses",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListAttachment",
+      "method": "GET",
+      "path": "/Attachments",
+      "description": "[GET /Attachments] GET /Attachments",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListAttachmentType",
+      "method": "GET",
+      "path": "/AttachmentTypes",
+      "description": "[GET /AttachmentTypes] GET /AttachmentTypes",
+      "pathParams": [],
+      "queryParams": [
+        "api-version",
+        "$filter",
+        "$top",
+        "$skip",
+        "$orderby",
+        "$select",
+        "$expand"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListBankDeposit",
+      "method": "GET",
+      "path": "/BankDeposits",
+      "description": "[GET /BankDeposits] GET /BankDeposits",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListBranche",
+      "method": "GET",
+      "path": "/Branches",
+      "description": "[GET /Branches] GET /Branches",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListCatalogItem",
+      "method": "GET",
+      "path": "/CatalogItems",
+      "description": "[GET /CatalogItems] GET /CatalogItems",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListCatalogItemCategory",
+      "method": "GET",
+      "path": "/CatalogItemCategories",
+      "description": "[GET /CatalogItemCategories] GET /CatalogItemCategories",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListCertification",
+      "method": "GET",
+      "path": "/Certifications",
+      "description": "[GET /Certifications] GET /Certifications",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListCertificationType",
+      "method": "GET",
+      "path": "/CertificationTypes",
+      "description": "[GET /CertificationTypes] GET /CertificationTypes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListClockTime",
+      "method": "GET",
+      "path": "/ClockTimes",
+      "description": "[GET /ClockTimes] GET /ClockTimes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListCompany",
+      "method": "GET",
+      "path": "/Companies",
+      "description": "[GET /Companies] GET /Companies",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListContact",
+      "method": "GET",
+      "path": "/Contacts",
+      "description": "[GET /Contacts] GET /Contacts",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListContactCustomField",
+      "method": "GET",
+      "path": "/ContactCustomFields",
+      "description": "[GET /ContactCustomFields] GET /ContactCustomFields",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListContactCustomFieldDefinition",
+      "method": "GET",
+      "path": "/ContactCustomFieldDefinitions",
+      "description": "[GET /ContactCustomFieldDefinitions] GET /ContactCustomFieldDefinitions",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListContactType",
+      "method": "GET",
+      "path": "/ContactTypes",
+      "description": "[GET /ContactTypes] GET /ContactTypes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListDivision",
+      "method": "GET",
+      "path": "/Divisions",
+      "description": "[GET /Divisions] GET /Divisions",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListDivisionIntegrationCode",
+      "method": "GET",
+      "path": "/DivisionIntegrationCodes",
+      "description": "[GET /DivisionIntegrationCodes] GET /DivisionIntegrationCodes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListEmployeeIncident",
+      "method": "GET",
+      "path": "/EmployeeIncidents",
+      "description": "[GET /EmployeeIncidents] GET /EmployeeIncidents",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListEmployeeIncidentType",
+      "method": "GET",
+      "path": "/EmployeeIncidentTypes",
+      "description": "[GET /EmployeeIncidentTypes] GET /EmployeeIncidentTypes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListEquipment",
+      "method": "GET",
+      "path": "/Equipments",
+      "description": "[GET /Equipments] GET /Equipments",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListEquipmentClass",
+      "method": "GET",
+      "path": "/EquipmentClasses",
+      "description": "[GET /EquipmentClasses] GET /EquipmentClasses",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListEquipmentDisposalReason",
+      "method": "GET",
+      "path": "/EquipmentDisposalReasons",
+      "description": "[GET /EquipmentDisposalReasons] GET /EquipmentDisposalReasons",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListEquipmentManufacturer",
+      "method": "GET",
+      "path": "/EquipmentManufacturers",
+      "description": "[GET /EquipmentManufacturers] GET /EquipmentManufacturers",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListEquipmentModel",
+      "method": "GET",
+      "path": "/EquipmentModels",
+      "description": "[GET /EquipmentModels] GET /EquipmentModels",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListEquipmentModelServiceSchedule",
+      "method": "GET",
+      "path": "/EquipmentModelServiceSchedules",
+      "description": "[GET /EquipmentModelServiceSchedules] GET /EquipmentModelServiceSchedules",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListEquipmentReadingLog",
+      "method": "GET",
+      "path": "/EquipmentReadingLogs",
+      "description": "[GET /EquipmentReadingLogs] GET /EquipmentReadingLogs",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListEquipmentRequestedService",
+      "method": "GET",
+      "path": "/EquipmentRequestedServices",
+      "description": "[GET /EquipmentRequestedServices] GET /EquipmentRequestedServices",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListEquipmentServiceLog",
+      "method": "GET",
+      "path": "/EquipmentServiceLogs",
+      "description": "[GET /EquipmentServiceLogs] GET /EquipmentServiceLogs",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListEquipmentServiceTag",
+      "method": "GET",
+      "path": "/EquipmentServiceTags",
+      "description": "[GET /EquipmentServiceTags] GET /EquipmentServiceTags",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListEquipmentSize",
+      "method": "GET",
+      "path": "/EquipmentSizes",
+      "description": "[GET /EquipmentSizes] GET /EquipmentSizes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListInventoryLocation",
+      "method": "GET",
+      "path": "/InventoryLocations",
+      "description": "[GET /InventoryLocations] GET /InventoryLocations",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListInvoice",
+      "method": "GET",
+      "path": "/Invoices",
+      "description": "[GET /Invoices] GET /Invoices",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListInvoiceBatche",
+      "method": "GET",
+      "path": "/InvoiceBatches",
+      "description": "[GET /InvoiceBatches] GET /InvoiceBatches",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListInvoiceRevenue",
+      "method": "GET",
+      "path": "/InvoiceRevenues",
+      "description": "[GET /InvoiceRevenues] GET /InvoiceRevenues",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListInvoiceTaxe",
+      "method": "GET",
+      "path": "/InvoiceTaxes",
+      "description": "[GET /InvoiceTaxes] GET /InvoiceTaxes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListItemAllocation",
+      "method": "GET",
+      "path": "/ItemAllocations",
+      "description": "[GET /ItemAllocations] GET /ItemAllocations",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListJob",
+      "method": "GET",
+      "path": "/Jobs",
+      "description": "[GET /Jobs] GET /Jobs",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListJobStatus",
+      "method": "GET",
+      "path": "/JobStatuses",
+      "description": "[GET /JobStatuses] GET /JobStatuses",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListLocality",
+      "method": "GET",
+      "path": "/Localities",
+      "description": "[GET /Localities] GET /Localities",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListObjectCode",
+      "method": "GET",
+      "path": "/ObjectCodes",
+      "description": "[GET /ObjectCodes] GET /ObjectCodes",
+      "pathParams": [],
+      "queryParams": [
+        "api-version",
+        "$filter",
+        "$top",
+        "$skip",
+        "$orderby",
+        "$select",
+        "$expand"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListOpportunity",
+      "method": "GET",
+      "path": "/Opportunities",
+      "description": "[GET /Opportunities] GET /Opportunities",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListOpportunityLostReason",
+      "method": "GET",
+      "path": "/OpportunityLostReasons",
+      "description": "[GET /OpportunityLostReasons] GET /OpportunityLostReasons",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListOpportunityService",
+      "method": "GET",
+      "path": "/OpportunityServices",
+      "description": "[GET /OpportunityServices] GET /OpportunityServices",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListOpportunityServiceGroup",
+      "method": "GET",
+      "path": "/OpportunityServiceGroups",
+      "description": "[GET /OpportunityServiceGroups] GET /OpportunityServiceGroups",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListOpportunityServiceItem",
+      "method": "GET",
+      "path": "/OpportunityServiceItems",
+      "description": "[GET /OpportunityServiceItems] GET /OpportunityServiceItems",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListOpportunityServiceKitItem",
+      "method": "GET",
+      "path": "/OpportunityServiceKitItems",
+      "description": "[GET /OpportunityServiceKitItems] GET /OpportunityServiceKitItems",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListOpportunityStatus",
+      "method": "GET",
+      "path": "/OpportunityStatuses",
+      "description": "[GET /OpportunityStatuses] GET /OpportunityStatuses",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListOpportunityTag",
+      "method": "GET",
+      "path": "/OpportunityTags",
+      "description": "[GET /OpportunityTags] GET /OpportunityTags",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListPayCode",
+      "method": "GET",
+      "path": "/PayCodes",
+      "description": "[GET /PayCodes] GET /PayCodes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListPayRate",
+      "method": "GET",
+      "path": "/PayRates",
+      "description": "[GET /PayRates] GET /PayRates",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListPayRateOverridePayCode",
+      "method": "GET",
+      "path": "/PayRateOverridePayCodes",
+      "description": "[GET /PayRateOverridePayCodes] GET /PayRateOverridePayCodes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListPaySchedule",
+      "method": "GET",
+      "path": "/PaySchedules",
+      "description": "[GET /PaySchedules] GET /PaySchedules",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListPayment",
+      "method": "GET",
+      "path": "/Payments",
+      "description": "[GET /Payments] GET /Payments",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListPaymentCategory",
+      "method": "GET",
+      "path": "/PaymentCategories",
+      "description": "[GET /PaymentCategories] GET /PaymentCategories",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListPaymentTerm",
+      "method": "GET",
+      "path": "/PaymentTerms",
+      "description": "[GET /PaymentTerms] GET /PaymentTerms",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListProperty",
+      "method": "GET",
+      "path": "/Properties",
+      "description": "[GET /Properties] GET /Properties",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListPropertyAvailability",
+      "method": "GET",
+      "path": "/PropertyAvailabilities",
+      "description": "[GET /PropertyAvailabilities] GET /PropertyAvailabilities",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListPropertyContact",
+      "method": "GET",
+      "path": "/PropertyContacts",
+      "description": "[GET /PropertyContacts] GET /PropertyContacts",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListPropertyCustomField",
+      "method": "GET",
+      "path": "/PropertyCustomFields",
+      "description": "[GET /PropertyCustomFields] GET /PropertyCustomFields",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListPropertyCustomFieldDefinition",
+      "method": "GET",
+      "path": "/PropertyCustomFieldDefinitions",
+      "description": "[GET /PropertyCustomFieldDefinitions] GET /PropertyCustomFieldDefinitions",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListPropertyGroup",
+      "method": "GET",
+      "path": "/PropertyGroups",
+      "description": "[GET /PropertyGroups] GET /PropertyGroups",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListPropertyStatus",
+      "method": "GET",
+      "path": "/PropertyStatuses",
+      "description": "[GET /PropertyStatuses] GET /PropertyStatuses",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListPropertyType",
+      "method": "GET",
+      "path": "/PropertyTypes",
+      "description": "[GET /PropertyTypes] GET /PropertyTypes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListProspectRating",
+      "method": "GET",
+      "path": "/ProspectRatings",
+      "description": "[GET /ProspectRatings] GET /ProspectRatings",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListReceipt",
+      "method": "GET",
+      "path": "/Receipts",
+      "description": "[GET /Receipts] GET /Receipts",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListReceiptStatus",
+      "method": "GET",
+      "path": "/ReceiptStatuses",
+      "description": "[GET /ReceiptStatuses] GET /ReceiptStatuses",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListRegion",
+      "method": "GET",
+      "path": "/Regions",
+      "description": "[GET /Regions] GET /Regions",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListRevenueVariance",
+      "method": "GET",
+      "path": "/RevenueVariances",
+      "description": "[GET /RevenueVariances] GET /RevenueVariances",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListRole",
+      "method": "GET",
+      "path": "/Roles",
+      "description": "[GET /Roles] GET /Roles",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListRoute",
+      "method": "GET",
+      "path": "/Routes",
+      "description": "[GET /Routes] GET /Routes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListSalesType",
+      "method": "GET",
+      "path": "/SalesTypes",
+      "description": "[GET /SalesTypes] GET /SalesTypes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListService",
+      "method": "GET",
+      "path": "/Services",
+      "description": "[GET /Services] GET /Services",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListServiceType",
+      "method": "GET",
+      "path": "/ServiceTypes",
+      "description": "[GET /ServiceTypes] GET /ServiceTypes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListServiceTypeIntegrationCode",
+      "method": "GET",
+      "path": "/ServiceTypeIntegrationCodes",
+      "description": "[GET /ServiceTypeIntegrationCodes] GET /ServiceTypeIntegrationCodes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListTag",
+      "method": "GET",
+      "path": "/Tags",
+      "description": "[GET /Tags] GET /Tags",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListTakeoffGroup",
+      "method": "GET",
+      "path": "/TakeoffGroups",
+      "description": "[GET /TakeoffGroups] GET /TakeoffGroups",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListTakeoffItem",
+      "method": "GET",
+      "path": "/TakeoffItems",
+      "description": "[GET /TakeoffItems] GET /TakeoffItems",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListTaxEntity",
+      "method": "GET",
+      "path": "/TaxEntities",
+      "description": "[GET /TaxEntities] GET /TaxEntities",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListTaxJurisdiction",
+      "method": "GET",
+      "path": "/TaxJurisdictions",
+      "description": "[GET /TaxJurisdictions] GET /TaxJurisdictions",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListUnitType",
+      "method": "GET",
+      "path": "/UnitTypes",
+      "description": "[GET /UnitTypes] GET /UnitTypes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListUser",
+      "method": "GET",
+      "path": "/Users",
+      "description": "[GET /Users] GET /Users",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListVendor",
+      "method": "GET",
+      "path": "/Vendors",
+      "description": "[GET /Vendors] GET /Vendors",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListWorkTicket",
+      "method": "GET",
+      "path": "/WorkTickets",
+      "description": "[GET /WorkTickets] GET /WorkTickets",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListWorkTicketCanceledReason",
+      "method": "GET",
+      "path": "/WorkTicketCanceledReasons",
+      "description": "[GET /WorkTicketCanceledReasons] GET /WorkTicketCanceledReasons",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListWorkTicketItem",
+      "method": "GET",
+      "path": "/WorkTicketItems",
+      "description": "[GET /WorkTicketItems] GET /WorkTicketItems",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListWorkTicketRevenue",
+      "method": "GET",
+      "path": "/WorkTicketRevenues",
+      "description": "[GET /WorkTicketRevenues] GET /WorkTicketRevenues",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListWorkTicketTime",
+      "method": "GET",
+      "path": "/WorkTicketTimes",
+      "description": "[GET /WorkTicketTimes] GET /WorkTicketTimes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListWorkTicketVisit",
+      "method": "GET",
+      "path": "/WorkTicketVisits",
+      "description": "[GET /WorkTicketVisits] GET /WorkTicketVisits",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListWorkTicketVisitNote",
+      "method": "GET",
+      "path": "/WorkTicketVisitNotes",
+      "description": "[GET /WorkTicketVisitNotes] GET /WorkTicketVisitNotes",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ListWorkersComp",
+      "method": "GET",
+      "path": "/WorkersComps",
+      "description": "[GET /WorkersComps] GET /WorkersComps",
+      "pathParams": [],
+      "queryParams": [
+        "$select",
+        "$filter",
+        "$expand",
+        "$orderby",
+        "$skip",
+        "$top",
+        "$pageNumber",
+        "$limit",
+        "api-version"
+      ],
+      "acceptsBody": false
+    },
+    {
+      "name": "ReceiptsApprove",
+      "method": "POST",
+      "path": "/Receipts/Approve",
+      "description": "[POST /Receipts/Approve] POST /Receipts/Approve",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "ReceiptsReceive",
+      "method": "POST",
+      "path": "/Receipts/Receive",
+      "description": "[POST /Receipts/Receive] POST /Receipts/Receive",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateCatalogItem",
+      "method": "PUT",
+      "path": "/CatalogItems",
+      "description": "[PUT /CatalogItems] PUT /CatalogItems",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateCompany",
+      "method": "PUT",
+      "path": "/Companies",
+      "description": "[PUT /Companies] PUT /Companies",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateContact",
+      "method": "PUT",
+      "path": "/Contacts",
+      "description": "[PUT /Contacts] PUT /Contacts",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateContactCustomField",
+      "method": "PUT",
+      "path": "/ContactCustomFields",
+      "description": "[PUT /ContactCustomFields] PUT /ContactCustomFields",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateEquipmentReadingLog",
+      "method": "PUT",
+      "path": "/EquipmentReadingLogs",
+      "description": "[PUT /EquipmentReadingLogs] PUT /EquipmentReadingLogs",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateItemAllocation",
+      "method": "PUT",
+      "path": "/ItemAllocations",
+      "description": "[PUT /ItemAllocations] PUT /ItemAllocations",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateLocality",
+      "method": "PUT",
+      "path": "/Localities",
+      "description": "[PUT /Localities] PUT /Localities",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateOpportunityLostReason",
+      "method": "PUT",
+      "path": "/OpportunityLostReasons",
+      "description": "[PUT /OpportunityLostReasons] PUT /OpportunityLostReasons",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdatePayCode",
+      "method": "PUT",
+      "path": "/PayCodes",
+      "description": "[PUT /PayCodes] PUT /PayCodes",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdatePayRate",
+      "method": "PUT",
+      "path": "/PayRates",
+      "description": "[PUT /PayRates] PUT /PayRates",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdatePayRateOverridePayCode",
+      "method": "PUT",
+      "path": "/PayRateOverridePayCodes",
+      "description": "[PUT /PayRateOverridePayCodes] PUT /PayRateOverridePayCodes",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdatePaySchedule",
+      "method": "PUT",
+      "path": "/PaySchedules",
+      "description": "[PUT /PaySchedules] PUT /PaySchedules",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateProperty",
+      "method": "PUT",
+      "path": "/Properties",
+      "description": "[PUT /Properties] PUT /Properties",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdatePropertyContact",
+      "method": "PUT",
+      "path": "/PropertyContacts",
+      "description": "[PUT /PropertyContacts] PUT /PropertyContacts",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdatePropertyCustomField",
+      "method": "PUT",
+      "path": "/PropertyCustomFields",
+      "description": "[PUT /PropertyCustomFields] PUT /PropertyCustomFields",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateServiceTaxOverride",
+      "method": "PUT",
+      "path": "/ServiceTaxOverrides",
+      "description": "[PUT /ServiceTaxOverrides] PUT /ServiceTaxOverrides",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateTaxEntity",
+      "method": "PUT",
+      "path": "/TaxEntities",
+      "description": "[PUT /TaxEntities] PUT /TaxEntities",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateTaxJurisdiction",
+      "method": "PUT",
+      "path": "/TaxJurisdictions",
+      "description": "[PUT /TaxJurisdictions] PUT /TaxJurisdictions",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateUnitType",
+      "method": "PUT",
+      "path": "/UnitTypes",
+      "description": "[PUT /UnitTypes] PUT /UnitTypes",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateUser",
+      "method": "PUT",
+      "path": "/Users",
+      "description": "[PUT /Users] PUT /Users",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateVendor",
+      "method": "PUT",
+      "path": "/Vendors",
+      "description": "[PUT /Vendors] PUT /Vendors",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "UpdateWorkersComp",
+      "method": "PUT",
+      "path": "/WorkersComps",
+      "description": "[PUT /WorkersComps] PUT /WorkersComps",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "WorkTicketStatusMarkWorkTicketAsReviewed",
+      "method": "POST",
+      "path": "/WorkTicketStatus/MarkWorkTicketAsReviewed",
+      "description": "[POST /WorkTicketStatus/MarkWorkTicketAsReviewed] POST /WorkTicketStatus/MarkWorkTicketAsReviewed",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "WorkTicketsCreateAsNeededWorkTickets",
+      "method": "POST",
+      "path": "/WorkTickets/CreateAsNeededWorkTickets",
+      "description": "[POST /WorkTickets/CreateAsNeededWorkTickets] POST /WorkTickets/CreateAsNeededWorkTickets",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    },
+    {
+      "name": "WorkTicketsPartialOccurrences",
+      "method": "PATCH",
+      "path": "/WorkTickets/PartialOccurrences",
+      "description": "[PATCH /WorkTickets/PartialOccurrences] PATCH /WorkTickets/PartialOccurrences",
+      "pathParams": [],
+      "queryParams": [
+        "api-version"
+      ],
+      "acceptsBody": true
+    }
+  ],
+  "nameCollisionsResolved": []
+}

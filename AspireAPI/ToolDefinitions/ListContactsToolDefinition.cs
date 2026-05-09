@@ -40,7 +40,7 @@ namespace AspireAPI.ToolDefinitions
         public async Task<JsonSchema> GetSchemaAsync(CancellationToken cancellationToken = default)
         {
             // Use proper NJsonSchema approach to generate schema from type
-            return await JsonSchema.FromTypeAsync<ListContactsInput>(new JsonSchemaGeneratorSettings { GenerateExamples = true });
+            return await Task.FromResult(JsonSchema.FromType<ListContactsInput>(new JsonSchemaGeneratorSettings { GenerateExamples = true }));
         }
     }
 }

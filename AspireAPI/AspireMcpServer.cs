@@ -43,8 +43,8 @@ public partial class AspireMcpServer
         _listContactsHandler = listContactsHandler;
         _listJobsHandler = listJobsHandler;
 
-        // Create the tool router
-        _toolRouter = new AspireToolRouter();
+        // Create the tool router (needs IServiceProvider for reporting-tool registration)
+        _toolRouter = new AspireToolRouter(serviceProvider);
 
         // Register tools using the RegisterToolHandlers method from AspireServerTools
         RegisterToolHandlers();

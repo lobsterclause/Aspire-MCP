@@ -80,7 +80,7 @@ namespace AspireAPI.ToolDefinitions
             }
         }
 
-        public async Task<JsonSchema> GetSchemaAsync(IServiceProvider serviceProvider)
+        public async Task<JsonSchema> GetSchemaAsync(CancellationToken cancellationToken = default)
         {
             return await JsonSchema.FromTypeAsync<BatchPaymentsProcessingInput>(new JsonSchemaGeneratorSettings { GenerateExamples = true });
         }

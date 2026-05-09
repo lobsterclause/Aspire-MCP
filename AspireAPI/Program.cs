@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using AspireAPI.AdminWeb;
+using AspireAPI.Compositions;
 using AspireAPI.Services;
 using AspireAPI.Handlers;
 using AspireAPI.ToolDefinitions;
@@ -184,6 +185,18 @@ public class Program
         // Register the code-generated tool surface (every endpoint in the Aspire OpenAPI spec).
         services.AddGeneratedAspireTools();
 
+        // Hand-written compositions that bundle multiple raw endpoints into one
+        // LLM-friendly verb. Registered as singleton handlers + tool definitions
+        // so they show up in tools/list alongside the generated set.
+        services.AddSingleton<GetJobLifecycleHandler>();
+        services.AddSingleton<GetCustomer360Handler>();
+        services.AddSingleton<RenderScheduleBoardHandler>();
+        services.AddSingleton<ListChangedSinceHandler>();
+        services.AddSingleton<IToolDefinition, GetJobLifecycleToolDefinition>();
+        services.AddSingleton<IToolDefinition, GetCustomer360ToolDefinition>();
+        services.AddSingleton<IToolDefinition, RenderScheduleBoardToolDefinition>();
+        services.AddSingleton<IToolDefinition, ListChangedSinceToolDefinition>();
+
         // Operator-facing infrastructure (consumed by both stdio + admin modes):
         // - allowlist gates ListTools and CallTool so disabling a tool from the
         //   admin UI removes it from MCP clients too.
@@ -206,6 +219,10 @@ public class Program
             router.RegisterTool("ListProperties", p => p.GetRequiredService<ListPropertiesHandler>());
             router.RegisterTool("ListContacts", p => p.GetRequiredService<ListContactsHandler>());
             router.RegisterTool("ListJobs", p => p.GetRequiredService<ListJobsHandler>());
+            router.RegisterTool("GetJobLifecycle", p => p.GetRequiredService<GetJobLifecycleHandler>());
+            router.RegisterTool("GetCustomer360", p => p.GetRequiredService<GetCustomer360Handler>());
+            router.RegisterTool("RenderScheduleBoard", p => p.GetRequiredService<RenderScheduleBoardHandler>());
+            router.RegisterTool("ListChangedSince", p => p.GetRequiredService<ListChangedSinceHandler>());
             router.RegisterGeneratedTools(sp);
             return router;
         });

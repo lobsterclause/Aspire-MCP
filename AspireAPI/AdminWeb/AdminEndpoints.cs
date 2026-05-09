@@ -64,6 +64,37 @@ namespace AspireAPI.AdminWeb
                 var result = await catalog.InvokeAsync(name, args, dryRun, ct);
                 return Results.Json(result);
             });
+
+            app.MapGet("/api/status", (TokenService tokens) =>
+            {
+                return Results.Json(tokens.GetStatus());
+            });
+
+            app.MapGet("/api/tail", (CallTailBuffer tail, HttpRequest req) =>
+            {
+                var max = int.TryParse(req.Query["max"], out var m) && m > 0 && m <= CallTailBuffer.Capacity
+                    ? m : CallTailBuffer.Capacity;
+                return Results.Json(tail.Recent(max));
+            });
+
+            app.MapPost("/api/tail/clear", (CallTailBuffer tail) =>
+            {
+                tail.Clear();
+                return Results.Json(new { cleared = true });
+            });
+
+            app.MapGet("/api/allowlist", (ToolAllowlistStore store) =>
+            {
+                return Results.Json(store.Load());
+            });
+
+            app.MapPost("/api/allowlist", async (HttpRequest req, ToolAllowlistStore store) =>
+            {
+                var cfg = await req.ReadFromJsonAsync<AllowlistConfig>();
+                if (cfg is null) return Results.BadRequest(new { error = "missing body" });
+                store.Save(cfg);
+                return Results.Json(new { saved = true, mode = cfg.Mode.ToString(), count = cfg.Tools.Count });
+            });
         }
 
         private static string LoadEmbeddedResource(string name)

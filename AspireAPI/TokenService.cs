@@ -29,6 +29,14 @@ public sealed class TokenService
     // Lock object to prevent concurrent token refresh operations
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
+    // Status fields exposed via GetStatus(). Updated whenever tokens are cached
+    // or invalidated. Reading them races with writes — that's fine for an
+    // operator-facing health panel, where eventual consistency is plenty.
+    private DateTime? _lastAcquiredAtUtc;
+    private DateTime? _expiresAtUtc;
+    private string? _lastError;
+    private DateTime? _lastErrorAtUtc;
+
     /// <summary>
     /// Initializes a new instance of the TokenService class.
     /// </summary>
@@ -250,11 +258,40 @@ public sealed class TokenService
         
         // Cache the access token with expiration
         _cache.Set(ACCESS_TOKEN_CACHE_KEY, tokenResponse.Access, expirationTime);
-        
+
         // Cache the refresh token with a longer expiration (usually refresh tokens last longer)
         // In a production system, you might want to store refresh tokens more securely
         _cache.Set(REFRESH_TOKEN_CACHE_KEY, tokenResponse.Refresh,
             DateTime.UtcNow.AddDays(30)); // Store refresh token for 30 days
+
+        _lastAcquiredAtUtc = DateTime.UtcNow;
+        _expiresAtUtc = expirationTime;
+        _lastError = null;
+        _lastErrorAtUtc = null;
+    }
+
+    /// <summary>
+    /// Snapshot of the token cache for the admin health panel. Does not
+    /// trigger a refresh; reflects only what's already in memory.
+    /// </summary>
+    public TokenStatus GetStatus()
+    {
+        var hasToken = _cache.TryGetValue(ACCESS_TOKEN_CACHE_KEY, out string? _);
+        var hasRefresh = _cache.TryGetValue(REFRESH_TOKEN_CACHE_KEY, out string? _);
+        return new TokenStatus(
+            HasAccessToken: hasToken,
+            HasRefreshToken: hasRefresh,
+            AcquiredAtUtc: _lastAcquiredAtUtc,
+            ExpiresAtUtc: _expiresAtUtc,
+            UseTokenAuth: _options.Auth.UseTokenAuth,
+            LastError: _lastError,
+            LastErrorAtUtc: _lastErrorAtUtc);
+    }
+
+    internal void RecordError(string message)
+    {
+        _lastError = message;
+        _lastErrorAtUtc = DateTime.UtcNow;
     }
     
     /// <summary>
@@ -267,6 +304,18 @@ public sealed class TokenService
         _cache.Remove(REFRESH_TOKEN_CACHE_KEY);
     }
 }
+
+/// <summary>
+/// Read-only snapshot of the token cache, used by the admin web UI's status panel.
+/// </summary>
+public sealed record TokenStatus(
+    bool HasAccessToken,
+    bool HasRefreshToken,
+    DateTime? AcquiredAtUtc,
+    DateTime? ExpiresAtUtc,
+    bool UseTokenAuth,
+    string? LastError,
+    DateTime? LastErrorAtUtc);
 
 /// <summary>
 /// Response model for token authentication operations.

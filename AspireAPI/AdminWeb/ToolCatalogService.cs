@@ -22,17 +22,23 @@ namespace AspireAPI.AdminWeb
         private readonly AspireToolRouter _router;
         private readonly TokenService _tokenService;
         private readonly IEnumerable<IToolDefinition> _toolDefinitions;
+        private readonly ToolAllowlistStore _allowlist;
+        private readonly CallTailBuffer _tail;
 
         public ToolCatalogService(
             IServiceProvider provider,
             AspireToolRouter router,
             TokenService tokenService,
-            IEnumerable<IToolDefinition> toolDefinitions)
+            IEnumerable<IToolDefinition> toolDefinitions,
+            ToolAllowlistStore allowlist,
+            CallTailBuffer tail)
         {
             _provider = provider;
             _router = router;
             _tokenService = tokenService;
             _toolDefinitions = toolDefinitions;
+            _allowlist = allowlist;
+            _tail = tail;
         }
 
         /// <summary>
@@ -40,6 +46,7 @@ namespace AspireAPI.AdminWeb
         /// </summary>
         public async Task<IReadOnlyList<ToolCatalogEntry>> ListAsync(CancellationToken cancellationToken)
         {
+            _allowlist.Load();
             var entries = new List<ToolCatalogEntry>();
             foreach (var def in _toolDefinitions.OrderBy(d => d.Name, StringComparer.OrdinalIgnoreCase))
             {
@@ -53,7 +60,8 @@ namespace AspireAPI.AdminWeb
                 {
                     schemaNode = new JsonObject { ["__schemaError"] = ex.Message };
                 }
-                entries.Add(new ToolCatalogEntry(def.Name, def.Description, schemaNode));
+                var enabled = _allowlist.IsAllowed(def.Name);
+                entries.Add(new ToolCatalogEntry(def.Name, def.Description, schemaNode, enabled));
             }
             return entries;
         }
@@ -69,9 +77,19 @@ namespace AspireAPI.AdminWeb
             bool dryRun,
             CancellationToken cancellationToken)
         {
+            _allowlist.Load();
+            if (!_allowlist.IsAllowed(toolName))
+            {
+                _tail.Record(new CallEntry(DateTime.UtcNow, toolName, false, 0, 403, dryRun,
+                    "tool disabled by allowlist", "admin"));
+                return new ToolInvocationResult(false, 403, 0,
+                    $"Tool '{toolName}' is disabled by allowlist.", dryRun);
+            }
             var handler = _router.GetToolHandler(toolName, _provider);
             if (handler is null)
             {
+                _tail.Record(new CallEntry(DateTime.UtcNow, toolName, false, 0, 404, dryRun,
+                    "unknown tool", "admin"));
                 return new ToolInvocationResult(
                     Ok: false,
                     StatusCode: 404,
@@ -131,6 +149,8 @@ namespace AspireAPI.AdminWeb
 
                 var ok = response.Error is null;
                 var body = ok ? ContentToString(response.Content) : (response.Error?.Message ?? string.Empty);
+                _tail.Record(new CallEntry(DateTime.UtcNow, toolName, ok, sw.ElapsedMilliseconds,
+                    ok ? 200 : 500, false, ok ? null : body, "admin"));
                 return new ToolInvocationResult(
                     Ok: ok,
                     StatusCode: ok ? 200 : 500,
@@ -141,6 +161,8 @@ namespace AspireAPI.AdminWeb
             catch (Exception ex)
             {
                 sw.Stop();
+                _tail.Record(new CallEntry(DateTime.UtcNow, toolName, false, sw.ElapsedMilliseconds,
+                    500, false, ex.Message, "admin"));
                 return new ToolInvocationResult(
                     Ok: false,
                     StatusCode: 500,
@@ -163,7 +185,7 @@ namespace AspireAPI.AdminWeb
         }
     }
 
-    public sealed record ToolCatalogEntry(string Name, string Description, JsonNode? Schema);
+    public sealed record ToolCatalogEntry(string Name, string Description, JsonNode? Schema, bool Enabled);
 
     public sealed record ToolInvocationResult(
         bool Ok,

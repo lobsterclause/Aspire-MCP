@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using AspireAPI.AdminWeb;
 using AspireAPI.Handlers; // Ensure Handlers namespace is included
 using AspireAPI.ToolDefinitions; // Ensure ToolDefinitions namespace is included
 using ModelContextProtocol.Server;
@@ -28,11 +29,16 @@ public partial class AspireMcpServer
     // Router is now resolved from DI (singleton) — admin-mode UI shares the same
     // router instance so its catalog/runner sees the exact same tool surface as
     // an MCP client would.
+    private readonly ToolAllowlistStore _allowlist;
+    private readonly CallTailBuffer _tail;
+
     public AspireMcpServer(
         TokenService tokenService,
         ILogger<AspireMcpServer> logger,
         IServiceProvider serviceProvider,
         AspireToolRouter toolRouter,
+        ToolAllowlistStore allowlist,
+        CallTailBuffer tail,
         ListPaymentsHandler listPaymentsHandler,
         ListPropertiesHandler listPropertiesHandler,
         ListContactsHandler listContactsHandler,
@@ -42,6 +48,8 @@ public partial class AspireMcpServer
         _logger = logger;
         _serviceProvider = serviceProvider;
         _toolRouter = toolRouter;
+        _allowlist = allowlist;
+        _tail = tail;
         _listPaymentsHandler = listPaymentsHandler;
         _listPropertiesHandler = listPropertiesHandler;
         _listContactsHandler = listContactsHandler;
@@ -92,8 +100,16 @@ public partial class AspireMcpServer
 
         var tools = new List<Tool>();
         
+        // Reload allowlist so out-of-band edits to Local.json are picked up
+        // without restart. Cheap (one file stat + small parse).
+        _allowlist.Load();
+
         foreach (var toolDef in toolDefinitions)
         {
+            // Skip tools the operator has disabled — they shouldn't appear in
+            // tools/list either, otherwise clients keep trying to call them.
+            if (!_allowlist.IsAllowed(toolDef.Name)) continue;
+
             var schema = await toolDef.GetSchemaAsync(cancellationToken);
             // Per the MCP spec, inputSchema is a nested JSON object on the wire,
             // not a JSON string. Parse the rendered schema once here so the
@@ -115,15 +131,26 @@ public partial class AspireMcpServer
 
     private async Task<CallToolResponse> CallToolHandlerAsync(CallToolRequest request, CancellationToken cancellationToken)
     {
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        var toolName = request.Params?.Name ?? "<unknown>";
         try
         {
-            var toolName = request.Params?.Name;
             var arguments = request.Params?.Arguments;
 
-            if (string.IsNullOrEmpty(toolName))
+            if (string.IsNullOrEmpty(request.Params?.Name))
             {
                 _logger.LogError("Invalid tool request: missing tool name.");
                 return new CallToolResponse().WithError("Invalid tool request");
+            }
+
+            // Refuse explicitly disabled tools — even if a client kept the name
+            // from a previous tools/list call.
+            _allowlist.Load();
+            if (!_allowlist.IsAllowed(toolName))
+            {
+                _tail.Record(new CallEntry(DateTime.UtcNow, toolName, false, 0, 403, false,
+                    "tool disabled by allowlist", "mcp"));
+                return new CallToolResponse().WithError($"Tool '{toolName}' is disabled.");
             }
 
             // Use tool router to route to the appropriate handler
@@ -132,6 +159,8 @@ public partial class AspireMcpServer
             if (handler == null)
             {
                  _logger.LogError($"Unknown tool requested: {toolName}");
+                 _tail.Record(new CallEntry(DateTime.UtcNow, toolName, false, 0, 404, false,
+                     "unknown tool", "mcp"));
                  return new CallToolResponse().WithError($"Unknown tool: {toolName}");
             }
 
@@ -170,8 +199,10 @@ public partial class AspireMcpServer
 
             // Call the handler with the correct parameter types
             var result = await handler.HandleAsync(argsDictionary, accessToken, cancellationToken);
-
-            // Return the result directly as it's already a CallToolResponse
+            sw.Stop();
+            _tail.Record(new CallEntry(DateTime.UtcNow, toolName, result.Error is null,
+                sw.ElapsedMilliseconds, result.Error is null ? 200 : 500, false,
+                result.Error?.Message, "mcp"));
             return result;
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -182,7 +213,10 @@ public partial class AspireMcpServer
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error handling tool: {request.Params?.Name}");
+            sw.Stop();
+            _logger.LogError(ex, $"Error handling tool: {toolName}");
+            _tail.Record(new CallEntry(DateTime.UtcNow, toolName, false,
+                sw.ElapsedMilliseconds, 500, false, ex.Message, "mcp"));
             return new CallToolResponse().WithError($"Error calling tool: {ex.Message}");
         }
     }

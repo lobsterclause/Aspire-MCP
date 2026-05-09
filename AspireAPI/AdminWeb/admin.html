@@ -53,6 +53,21 @@
     }
     .catalog-list li:hover { background: #f5f5f5; }
     .catalog-list li.selected { background: #e7f0ff; color: var(--accent); font-weight: 600; }
+    .catalog-list li.disabled { color: #aaa; text-decoration: line-through; }
+    .catalog-list li input[type=checkbox] { margin-right: 8px; vertical-align: middle; }
+    .status-grid { display: grid; grid-template-columns: 200px 1fr; gap: 8px 16px; font-size: 14px; }
+    .status-grid dt { color: var(--muted); font-weight: 600; }
+    .status-grid dd { margin: 0; font-family: ui-monospace, monospace; word-break: break-all; }
+    .status-grid dd.ok { color: var(--ok); }
+    .status-grid dd.warn { color: var(--warn); }
+    table.tail { width: 100%; border-collapse: collapse; font-size: 13px; }
+    table.tail th, table.tail td { text-align: left; padding: 6px 10px; border-bottom: 1px solid #f0f0f0; font-family: ui-monospace, monospace; }
+    table.tail th { color: var(--muted); font-weight: 600; background: #fafafa; }
+    table.tail td.ok { color: var(--ok); }
+    table.tail td.fail { color: var(--warn); }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; background: #eef; color: #335; }
+    .pill.admin { background: #ecfdf3; color: #057a55; }
+    .pill.mcp { background: #eef3ff; color: #2952b3; }
     .catalog-detail .meta-row { font-size: 12px; color: var(--muted); margin-bottom: 8px; font-family: ui-monospace, monospace; }
     .catalog-detail textarea {
       width: 100%; min-height: 180px; padding: 10px; border: 1px solid var(--border);
@@ -138,6 +153,8 @@
     <nav class="tabs">
       <button type="button" data-tab="cfg-pane" class="active">Configuration</button>
       <button type="button" data-tab="catalog-pane">Tool catalog</button>
+      <button type="button" data-tab="status-pane">Status</button>
+      <button type="button" data-tab="tail-pane">Activity</button>
     </nav>
 
     <div id="status" class="status"></div>
@@ -214,6 +231,13 @@
       <div class="catalog-layout">
         <div class="catalog-list">
           <input type="search" id="cat-filter" placeholder="Filter 162 tools…" autocomplete="off" />
+          <div style="padding: 8px 12px; font-size: 12px; color: var(--muted); border-bottom: 1px solid var(--border);">
+            <label style="margin: 0;">
+              <input type="checkbox" id="allowlist-edit" />
+              Edit allowlist (uncheck to disable a tool)
+            </label>
+            <button type="button" id="allowlist-save" class="secondary" style="display:none;margin-left:8px;padding:2px 8px;font-size:11px;">Save allowlist</button>
+          </div>
           <ul id="cat-list"></ul>
         </div>
         <div class="catalog-detail">
@@ -237,6 +261,34 @@
             </details>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section id="status-pane" class="tabpane">
+      <div class="card">
+        <h2>Token cache</h2>
+        <dl class="status-grid" id="status-grid">
+          <dt>Loading…</dt><dd>—</dd>
+        </dl>
+        <div class="toolbar" style="margin-top:16px;">
+          <button type="button" id="status-refresh" class="secondary">Refresh</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="tail-pane" class="tabpane">
+      <div class="card">
+        <h2>Recent activity (last 200 calls, newest first)</h2>
+        <div class="toolbar" style="margin-bottom:12px;">
+          <button type="button" id="tail-refresh" class="secondary">Refresh</button>
+          <button type="button" id="tail-clear" class="secondary">Clear</button>
+        </div>
+        <table class="tail" id="tail-table">
+          <thead>
+            <tr><th>Time (UTC)</th><th>Tool</th><th>Source</th><th>Status</th><th>Latency</th><th>Notes</th></tr>
+          </thead>
+          <tbody><tr><td colspan="6" style="text-align:center;color:var(--muted);">Loading…</td></tr></tbody>
+        </table>
       </div>
     </section>
   </main>
@@ -317,6 +369,8 @@
         btn.classList.add('active');
         document.getElementById(btn.dataset.tab).classList.add('active');
         if (btn.dataset.tab === 'catalog-pane' && !catalogLoaded) loadCatalog();
+        if (btn.dataset.tab === 'status-pane') loadStatus();
+        if (btn.dataset.tab === 'tail-pane') loadTail();
       });
     });
 
@@ -343,15 +397,47 @@
       ul.innerHTML = '';
       const lower = filter.toLowerCase();
       const matches = allTools.filter(t => !filter || t.name.toLowerCase().includes(lower));
+      const editing = document.getElementById('allowlist-edit').checked;
       matches.forEach(t => {
         const li = document.createElement('li');
-        li.textContent = t.name;
+        if (editing) {
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.checked = t.enabled !== false;
+          cb.dataset.name = t.name;
+          cb.addEventListener('click', e => e.stopPropagation());
+          cb.addEventListener('change', () => { t.enabled = cb.checked; });
+          li.appendChild(cb);
+          li.appendChild(document.createTextNode(t.name));
+        } else {
+          li.textContent = t.name;
+        }
         li.dataset.name = t.name;
+        if (t.enabled === false) li.classList.add('disabled');
         if (selectedTool === t.name) li.classList.add('selected');
         li.addEventListener('click', () => selectTool(t.name));
         ul.appendChild(li);
       });
     }
+
+    document.getElementById('allowlist-edit').addEventListener('change', e => {
+      document.getElementById('allowlist-save').style.display = e.target.checked ? 'inline-block' : 'none';
+      renderCatalogList(document.getElementById('cat-filter').value);
+    });
+
+    document.getElementById('allowlist-save').addEventListener('click', async () => {
+      const disabled = allTools.filter(t => t.enabled === false).map(t => t.name);
+      const r = await fetch('/api/allowlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ Mode: 'Blocklist', Tools: disabled }),
+      });
+      if (r.ok) {
+        showStatus(`Allowlist saved: ${disabled.length} tools disabled.`, 'ok');
+      } else {
+        showStatus('Save failed: ' + r.status, 'warn');
+      }
+    });
 
     function selectTool(name) {
       selectedTool = name;
@@ -411,6 +497,58 @@
     function escapeHtml(s) {
       return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     }
+
+    // ---- token status panel ----
+    async function loadStatus() {
+      const r = await fetch('/api/status');
+      const s = await r.json();
+      const grid = document.getElementById('status-grid');
+      const fmt = v => v ?? '—';
+      const fmtTime = v => v ? new Date(v).toISOString().replace('T', ' ').replace(/\.\d+Z$/, ' UTC') : '—';
+      const expClass = s.expiresAtUtc && new Date(s.expiresAtUtc) > new Date() ? 'ok' : 'warn';
+      const tokClass = s.hasAccessToken ? 'ok' : 'warn';
+      grid.innerHTML = `
+        <dt>Auth mode</dt><dd>${fmt(s.useTokenAuth ? 'OAuth (token)' : 'API key')}</dd>
+        <dt>Has access token</dt><dd class="${tokClass}">${fmt(s.hasAccessToken)}</dd>
+        <dt>Has refresh token</dt><dd>${fmt(s.hasRefreshToken)}</dd>
+        <dt>Acquired at</dt><dd>${fmtTime(s.acquiredAtUtc)}</dd>
+        <dt>Expires at</dt><dd class="${expClass}">${fmtTime(s.expiresAtUtc)}</dd>
+        <dt>Last error</dt><dd class="${s.lastError ? 'warn' : ''}">${fmt(s.lastError) || '—'}</dd>
+        <dt>Last error at</dt><dd>${fmtTime(s.lastErrorAtUtc)}</dd>
+      `;
+    }
+    document.getElementById('status-refresh').addEventListener('click', loadStatus);
+
+    // ---- tail panel ----
+    async function loadTail() {
+      const r = await fetch('/api/tail');
+      const rows = await r.json();
+      const tbody = document.querySelector('#tail-table tbody');
+      if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);">No calls recorded yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map(r => {
+        const t = new Date(r.atUtc).toISOString().replace('T', ' ').replace(/\.\d+Z$/, '');
+        const okClass = r.ok ? 'ok' : 'fail';
+        const status = r.statusCode || (r.dryRun ? 'dry' : '?');
+        const note = r.error ? escapeHtml(r.error.slice(0, 120)) : '';
+        const sourceCls = r.source === 'admin' ? 'admin' : 'mcp';
+        return `<tr>
+          <td>${t}</td>
+          <td>${escapeHtml(r.toolName)}</td>
+          <td><span class="pill ${sourceCls}">${r.source}</span></td>
+          <td class="${okClass}">${r.ok ? '✓' : '✗'} ${status}</td>
+          <td>${r.durationMs}ms</td>
+          <td>${note}</td>
+        </tr>`;
+      }).join('');
+    }
+    document.getElementById('tail-refresh').addEventListener('click', loadTail);
+    document.getElementById('tail-clear').addEventListener('click', async () => {
+      await fetch('/api/tail/clear', { method: 'POST' });
+      loadTail();
+    });
   })();
   </script>
 </body>

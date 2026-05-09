@@ -16,6 +16,7 @@ using ModelContextProtocol.Protocol.Types;
 using ModelContextProtocol.Protocol.Transport;
 using System.Net;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -82,7 +83,17 @@ public class Program
         ConfigureSharedServices(builder.Services, builder.Configuration);
 
         builder.Services.AddSingleton(_ => new LocalSettingsStore(builder.Environment.ContentRootPath));
+        // Replace the default-cwd allowlist store with one that uses the project's
+        // content root, so writes from the admin UI land in the correct file.
+        builder.Services.AddSingleton(_ => new ToolAllowlistStore(builder.Environment.ContentRootPath));
         builder.Services.AddSingleton<ToolCatalogService>();
+
+        // Accept enums as their string names ("Blocklist") in request bodies and
+        // serialize them the same way in responses. Used by the allowlist endpoints.
+        builder.Services.ConfigureHttpJsonOptions(opts =>
+        {
+            opts.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
 
         var app = builder.Build();
         app.MapAdminEndpoints();
@@ -172,6 +183,18 @@ public class Program
 
         // Register the code-generated tool surface (every endpoint in the Aspire OpenAPI spec).
         services.AddGeneratedAspireTools();
+
+        // Operator-facing infrastructure (consumed by both stdio + admin modes):
+        // - allowlist gates ListTools and CallTool so disabling a tool from the
+        //   admin UI removes it from MCP clients too.
+        // - tail buffer captures every call for the admin UI's recent-activity panel.
+        // Allowlist reads/writes appsettings.Local.json. We pass the project's
+        // content root rather than AppContext.BaseDirectory (which is bin/Debug/...)
+        // so it matches LocalSettingsStore's path. Admin-mode DI overrides this
+        // with the resolved WebHost ContentRoot below.
+        services.AddSingleton<AdminWeb.ToolAllowlistStore>(sp =>
+            new AdminWeb.ToolAllowlistStore(Directory.GetCurrentDirectory()));
+        services.AddSingleton<AdminWeb.CallTailBuffer>();
 
         // Single shared router: hand-written 4 + 158 generated tools, registered
         // once in the singleton factory. Both AspireMcpServer (stdio mode) and

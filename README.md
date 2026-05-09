@@ -213,17 +213,27 @@ AspireMCP/
 ## Tool surface
 
 As of the most recent codegen run (Aspire OpenAPI spec dated Nov 2025), the
-server exposes **162 tools**: 4 hand-written back-compat aliases
-(`ListContacts`, `ListJobs`, `ListPayments`, `ListProperties`) plus 158
-code-generated tools — one per `(path, method)` pair across every endpoint in
-the Aspire External REST API. The generated set covers every read operation,
-every documented write operation (POST/PUT/PATCH/DELETE), and every custom
-action endpoint such as `Receipts/Approve`, `Receipts/Receive`,
-`WorkTickets/CreateAsNeededWorkTickets`, and
-`WorkTicketStatus/MarkWorkTicketAsReviewed`.
+server *registers* **163 tools**: 158 code-generated (one per `(path, method)`
+pair across the entire Aspire External REST API) + 5 hand-written
+compositions (`GetJobLifecycle`, `GetCustomer360`, `RenderScheduleBoard`,
+`ListChangedSince`, `SearchAspire`).
 
-The full inventory — names, methods, paths, query/path parameters, and
-descriptions — is committed at `AspireAPI/Generated/tool-manifest.json`.
+**Discovery-first default.** A fresh install only *exposes* 6 tools to MCP
+clients: the 5 compositions plus `GetVersionGetApiVersion`. Everything else
+is registered but hidden by the allowlist. The intent is that a freshly-
+connected Claude (or any MCP client) sees a small focused surface and can
+route most queries through `SearchAspire` until the operator has tailored
+the catalog to their tenant.
+
+To unlock more of the catalog, run **Auto-detect from tenant** in the admin
+UI — it probes every safe collection endpoint with `$top=1`, classifies the
+result (populated / empty / auth-failed / broken), and the operator picks
+which to expose. Apply switches the allowlist into Allowlist mode with the
+opted-in set + the discovery bootstrap.
+
+The full registered inventory — names, methods, paths, query/path
+parameters, and descriptions — is committed at
+`AspireAPI/Generated/tool-manifest.json`.
 
 ### Production-write safety guard
 

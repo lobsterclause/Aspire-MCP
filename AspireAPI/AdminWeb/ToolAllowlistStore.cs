@@ -32,7 +32,7 @@ namespace AspireAPI.AdminWeb
 
         // Loaded snapshot — re-loaded on every Load() call from disk to pick up
         // out-of-band edits.
-        private AllowlistConfig _current = AllowlistConfig.AllowAll();
+        private AllowlistConfig _current = AllowlistConfig.Default();
         private readonly object _lock = new();
 
         public ToolAllowlistStore(string contentRootPath)
@@ -99,14 +99,14 @@ namespace AspireAPI.AdminWeb
 
         private AllowlistConfig LoadFromDisk()
         {
-            if (!File.Exists(LocalPath)) return AllowlistConfig.AllowAll();
+            if (!File.Exists(LocalPath)) return AllowlistConfig.Default();
             try
             {
                 var text = File.ReadAllText(LocalPath);
                 var root = JsonNode.Parse(text) as JsonObject;
                 var aspire = root?["AspireApi"] as JsonObject;
                 var node = aspire?["Allowlist"] as JsonObject;
-                if (node is null) return AllowlistConfig.AllowAll();
+                if (node is null) return AllowlistConfig.Default();
                 var modeStr = node["Mode"]?.GetValue<string>() ?? "blocklist";
                 var mode = string.Equals(modeStr, "allowlist", StringComparison.OrdinalIgnoreCase)
                     ? AllowlistMode.Allowlist
@@ -119,7 +119,7 @@ namespace AspireAPI.AdminWeb
             }
             catch
             {
-                return AllowlistConfig.AllowAll();
+                return AllowlistConfig.Default();
             }
         }
     }
@@ -134,6 +134,28 @@ namespace AspireAPI.AdminWeb
 
     public sealed record AllowlistConfig(AllowlistMode Mode, IReadOnlyList<string> Tools)
     {
+        /// <summary>
+        /// Discovery-first default: only SearchAspire + the four compositions +
+        /// the version probe are enabled. Operators opt-in the rest via the
+        /// admin UI's "Auto-detect from tenant" probe (or by editing the
+        /// allowlist manually). Stops MCP clients from seeing 167 tools on
+        /// first connect — they see the 6-tool discovery surface and can
+        /// route everything else through SearchAspire until the operator
+        /// has tailored the allowlist.
+        /// </summary>
+        public static AllowlistConfig Default() => new(AllowlistMode.Allowlist, BootstrapTools);
+
+        /// <summary>Open the floodgates — only used by operators who explicitly want it.</summary>
         public static AllowlistConfig AllowAll() => new(AllowlistMode.Blocklist, Array.Empty<string>());
+
+        public static IReadOnlyList<string> BootstrapTools { get; } = new[]
+        {
+            "SearchAspire",
+            "GetJobLifecycle",
+            "GetCustomer360",
+            "RenderScheduleBoard",
+            "ListChangedSince",
+            "GetVersionGetApiVersion",
+        };
     }
 }

@@ -88,6 +88,7 @@ public class Program
         // content root, so writes from the admin UI land in the correct file.
         builder.Services.AddSingleton(_ => new ToolAllowlistStore(builder.Environment.ContentRootPath));
         builder.Services.AddSingleton<ToolCatalogService>();
+        builder.Services.AddSingleton<TenantProbeService>();
 
         // Accept enums as their string names ("Blocklist") in request bodies and
         // serialize them the same way in responses. Used by the allowlist endpoints.
@@ -170,19 +171,10 @@ public class Program
         services.AddSingleton<AspireApiHelpers>();
         services.AddSingleton<AspireApiService>();
 
-        // Register all handlers
-        services.AddSingleton<ListPaymentsHandler>();
-        services.AddSingleton<ListPropertiesHandler>();
-        services.AddSingleton<ListContactsHandler>();
-        services.AddSingleton<ListJobsHandler>();
-
-        // Register all tool definitions
-        services.AddSingleton<IToolDefinition, ListPaymentsToolDefinition>();
-        services.AddSingleton<IToolDefinition, ListPropertiesToolDefinition>();
-        services.AddSingleton<IToolDefinition, ListContactsToolDefinition>();
-        services.AddSingleton<IToolDefinition, ListJobsToolDefinition>();
-
         // Register the code-generated tool surface (every endpoint in the Aspire OpenAPI spec).
+        // The hand-written ListContacts/ListJobs/ListPayments/ListProperties aliases were
+        // removed — they were exact duplicates of the generated ListContact/ListJob/etc.,
+        // and never had real clients (the codebase wasn't building before this work).
         services.AddGeneratedAspireTools();
 
         // Hand-written compositions that bundle multiple raw endpoints into one

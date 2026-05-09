@@ -95,6 +95,20 @@ namespace AspireAPI.AdminWeb
                 store.Save(cfg);
                 return Results.Json(new { saved = true, mode = cfg.Mode.ToString(), count = cfg.Tools.Count });
             });
+
+            app.MapPost("/api/probe", async (TenantProbeService probe, System.Threading.CancellationToken ct) =>
+            {
+                var result = await probe.ProbeAsync(ct);
+                return Results.Json(result);
+            });
+
+            app.MapGet("/api/bootstrap", () =>
+            {
+                // The discovery-first default: tools that are always on regardless
+                // of the allowlist UI's state. UI uses this to disable their
+                // "uncheck to disable" controls.
+                return Results.Json(new { tools = AllowlistConfig.BootstrapTools });
+            });
         }
 
         private static string LoadEmbeddedResource(string name)

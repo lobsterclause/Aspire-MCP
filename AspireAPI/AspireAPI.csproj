@@ -77,6 +77,9 @@
     <!-- Embed the admin web UI's HTML so it ships inside the assembly and the
          binary stays self-contained — no extra wwwroot to deploy. -->
     <EmbeddedResource Include="AdminWeb/admin.html" />
+    <!-- Tool manifest is consumed at runtime by TenantProbe to decide which
+         tools are safe (GET, no path params) to probe automatically. -->
+    <EmbeddedResource Include="Generated/tool-manifest.json" />
   </ItemGroup>
 
   <ItemGroup>

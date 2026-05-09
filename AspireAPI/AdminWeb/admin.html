@@ -68,6 +68,31 @@
     .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; background: #eef; color: #335; }
     .pill.admin { background: #ecfdf3; color: #057a55; }
     .pill.mcp { background: #eef3ff; color: #2952b3; }
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100;
+      display: none; align-items: center; justify-content: center;
+    }
+    .modal-backdrop.show { display: flex; }
+    .modal {
+      background: var(--card-bg); border-radius: 8px; max-width: 900px; width: 92vw;
+      max-height: 86vh; overflow: hidden; display: flex; flex-direction: column;
+    }
+    .modal-hdr { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .modal-hdr h2 { margin: 0; text-transform: none; letter-spacing: 0; color: var(--fg); font-size: 16px; }
+    .modal-body { padding: 16px 20px; overflow-y: auto; flex: 1; }
+    .modal-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
+    table.probe { width: 100%; border-collapse: collapse; font-size: 13px; }
+    table.probe th, table.probe td { text-align: left; padding: 6px 10px; border-bottom: 1px solid #f0f0f0; }
+    table.probe th { color: var(--muted); font-weight: 600; background: #fafafa; position: sticky; top: 0; }
+    table.probe td.cls { font-family: ui-monospace, monospace; font-size: 11px; }
+    .cls-populated { color: var(--ok); }
+    .cls-empty { color: #888; }
+    .cls-auth_failed { color: var(--warn); }
+    .cls-broken { color: var(--warn); }
+    .cls-timeout { color: var(--warn); }
+    .probe-summary { display: flex; gap: 16px; padding: 12px 0; font-size: 13px; }
+    .probe-summary span { color: var(--muted); }
+    .probe-summary b { color: var(--fg); }
     .catalog-detail .meta-row { font-size: 12px; color: var(--muted); margin-bottom: 8px; font-family: ui-monospace, monospace; }
     .catalog-detail textarea {
       width: 100%; min-height: 180px; padding: 10px; border: 1px solid var(--border);
@@ -234,9 +259,10 @@
           <div style="padding: 8px 12px; font-size: 12px; color: var(--muted); border-bottom: 1px solid var(--border);">
             <label style="margin: 0;">
               <input type="checkbox" id="allowlist-edit" />
-              Edit allowlist (uncheck to disable a tool)
+              Edit allowlist
             </label>
-            <button type="button" id="allowlist-save" class="secondary" style="display:none;margin-left:8px;padding:2px 8px;font-size:11px;">Save allowlist</button>
+            <button type="button" id="allowlist-save" class="secondary" style="display:none;margin-left:8px;padding:2px 8px;font-size:11px;">Save</button>
+            <button type="button" id="probe-start" class="secondary" style="margin-left:8px;padding:2px 8px;font-size:11px;">Auto-detect from tenant…</button>
           </div>
           <ul id="cat-list"></ul>
         </div>
@@ -291,6 +317,45 @@
         </table>
       </div>
     </section>
+
+    <div id="probe-modal" class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-hdr">
+          <h2>Auto-detect — probe tenant for available endpoints</h2>
+          <button type="button" class="secondary" id="probe-close" style="padding: 4px 10px;">Close</button>
+        </div>
+        <div class="modal-body">
+          <p style="margin: 0 0 12px; color: var(--muted); font-size: 13px;">
+            Sends <code>GET …?$top=1</code> to every collection endpoint and classifies the result.
+            Probes only safe (read-only, no path-id) endpoints. Concurrency 8, 15s per request.
+            Compositions and write tools are unaffected and stay enabled.
+          </p>
+          <div id="probe-progress" style="text-align: center; padding: 24px; color: var(--muted);">
+            Click <em>Start probe</em> to begin.
+          </div>
+          <div id="probe-results" style="display: none;">
+            <div class="probe-summary" id="probe-summary"></div>
+            <table class="probe">
+              <thead>
+                <tr>
+                  <th style="width: 40px;"><input type="checkbox" id="probe-select-all" /></th>
+                  <th>Tool</th>
+                  <th>Path</th>
+                  <th>Result</th>
+                  <th>Latency</th>
+                  <th>Note</th>
+                </tr>
+              </thead>
+              <tbody id="probe-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="probe-run" class="secondary">Start probe</button>
+          <button type="button" id="probe-apply" disabled>Apply as allowlist</button>
+        </div>
+      </div>
+    </div>
   </main>
 
   <script>
@@ -548,6 +613,104 @@
     document.getElementById('tail-clear').addEventListener('click', async () => {
       await fetch('/api/tail/clear', { method: 'POST' });
       loadTail();
+    });
+
+    // ---- tenant probe ----
+    let probeResults = null;
+
+    document.getElementById('probe-start').addEventListener('click', () => {
+      document.getElementById('probe-modal').classList.add('show');
+      document.getElementById('probe-progress').style.display = 'block';
+      document.getElementById('probe-progress').textContent = 'Click Start probe to begin.';
+      document.getElementById('probe-results').style.display = 'none';
+      document.getElementById('probe-apply').disabled = true;
+    });
+    document.getElementById('probe-close').addEventListener('click', () => {
+      document.getElementById('probe-modal').classList.remove('show');
+    });
+    document.getElementById('probe-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'probe-modal') {
+        document.getElementById('probe-modal').classList.remove('show');
+      }
+    });
+
+    document.getElementById('probe-run').addEventListener('click', async () => {
+      const btn = document.getElementById('probe-run');
+      const progress = document.getElementById('probe-progress');
+      btn.disabled = true;
+      progress.innerHTML = 'Probing tenant… this can take 30-90s depending on endpoint count and tenant latency.';
+      progress.style.display = 'block';
+      document.getElementById('probe-results').style.display = 'none';
+      try {
+        const r = await fetch('/api/probe', { method: 'POST' });
+        const data = await r.json();
+        if (data.fatalError) {
+          progress.innerHTML = '<span style="color:var(--warn)">Probe failed: ' + escapeHtml(data.fatalError) + '</span>';
+          return;
+        }
+        probeResults = data;
+        renderProbeResults(data);
+      } catch (e) {
+        progress.innerHTML = '<span style="color:var(--warn)">Request failed: ' + escapeHtml(e.message) + '</span>';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Re-run probe';
+      }
+    });
+
+    function renderProbeResults(data) {
+      document.getElementById('probe-progress').style.display = 'none';
+      document.getElementById('probe-results').style.display = 'block';
+      const counts = { populated: 0, empty: 0, auth_failed: 0, broken: 0, timeout: 0 };
+      data.results.forEach(r => { counts[r.classification.toLowerCase()] = (counts[r.classification.toLowerCase()] || 0) + 1; });
+      document.getElementById('probe-summary').innerHTML =
+        `<span><b>${data.probed}</b> probed in <b>${(data.durationMs/1000).toFixed(1)}s</b></span>` +
+        `<span class="cls-populated">populated: <b>${counts.populated}</b></span>` +
+        `<span class="cls-empty">empty: <b>${counts.empty}</b></span>` +
+        `<span class="cls-auth_failed">auth_failed: <b>${counts.auth_failed}</b></span>` +
+        `<span class="cls-broken">broken: <b>${counts.broken}</b></span>` +
+        `<span class="cls-timeout">timeout: <b>${counts.timeout}</b></span>`;
+      const tbody = document.getElementById('probe-tbody');
+      tbody.innerHTML = data.results.map((r, i) => {
+        const cls = r.classification.toLowerCase();
+        return `<tr>
+          <td><input type="checkbox" class="probe-row" data-tool="${escapeHtml(r.tool)}" ${r.recommend ? 'checked' : ''} /></td>
+          <td>${escapeHtml(r.tool)}</td>
+          <td><code style="font-size:11px;color:var(--muted);">${escapeHtml(r.path)}</code></td>
+          <td class="cls cls-${cls}">${cls}${r.statusCode ? ' (' + r.statusCode + ')' : ''}</td>
+          <td>${r.durationMs}ms</td>
+          <td style="font-size:12px;color:var(--muted);">${escapeHtml(r.note || '')}</td>
+        </tr>`;
+      }).join('');
+      document.getElementById('probe-apply').disabled = false;
+    }
+
+    document.getElementById('probe-select-all').addEventListener('change', (e) => {
+      document.querySelectorAll('.probe-row').forEach(cb => { cb.checked = e.target.checked; });
+    });
+
+    document.getElementById('probe-apply').addEventListener('click', async () => {
+      // Build an Allowlist (default-deny) with checked probe results PLUS the
+      // discovery-bootstrap tools (SearchAspire + compositions). Anything not
+      // in the list — including untouched writes — stays disabled until the
+      // operator opts them in.
+      const checkedTools = Array.from(document.querySelectorAll('.probe-row:checked')).map(cb => cb.dataset.tool);
+      const bootstrapResp = await fetch('/api/bootstrap');
+      const { tools: bootstrap } = await bootstrapResp.json();
+      const all = Array.from(new Set([...bootstrap, ...checkedTools]));
+      const r = await fetch('/api/allowlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ Mode: 'Allowlist', Tools: all }),
+      });
+      if (r.ok) {
+        showStatus(`Allowlist applied: ${all.length} tools enabled (${bootstrap.length} discovery + ${checkedTools.length} from probe). Everything else remains hidden from MCP clients.`, 'ok');
+        document.getElementById('probe-modal').classList.remove('show');
+        catalogLoaded = false;
+        loadCatalog();
+      } else {
+        showStatus('Apply failed: ' + r.status, 'warn');
+      }
     });
   })();
   </script>

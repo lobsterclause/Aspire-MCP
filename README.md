@@ -1,5 +1,7 @@
 # AspireMCP Server
 
+![Aspire MCP — discover the work, control the workflow](docs/assets/aspire-mcp-banner.png)
+
 A Model Context Protocol (MCP) server implementation for Aspire API integration that enables AI assistants to communicate with Aspire APIs through a standardized protocol.
 
 ## Project Overview
